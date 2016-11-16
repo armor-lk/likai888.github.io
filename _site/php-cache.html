@@ -583,117 +583,80 @@ li.L9 {
 
   <body class="body-post">
   <div class="post-wrapper">
-    <h1 class="post-title"><a href="/session-cookie" title="session与cookie">session与cookie</a></h1>
-    <p class="post-date">2015-02-23</p>
-    <h2 id="session">session</h2>
+    <h1 class="post-title"><a href="/php-cache" title="php缓存技术">php缓存技术</a></h1>
+    <p class="post-date">2015-03-24</p>
+    <h2 id="section">1.简介</h2>
 
-<p>Session:在计算机中，尤其是在网络应用中，称为“会话控制”。Session 对象存储特定用户会话所需的属性及配置信息。这样，当用户在应用程序的 Web 页之间跳转时，存储在 Session 对象中的变量将不会丢失，而是在整个用户会话中一直存在下去。当用户请求来自应用程序的 Web 页时，如果该用户还没有会话，则 Web 服务器将自动创建一个 Session 对象。当会话过期或被放弃后，服务器将终止该会话。Session 对象最常见的一个用法就是存储用户的首选项。例如，如果用户指明不喜欢查看图形，就可以将该信息存储在 Session 对象中。</p>
+<p>PHP缓存包括PHP编译缓存和PHP数据缓存两种。PHP是一种解释型语言，属于边编译边运行的那种。这种运行模式的优点是程序修改很方便，但是运行效率却很低下。PHP编译缓存针对这种情况做改进处理，使得PHP语言只要运行一次，就可以把程序的编译结果缓存起来。这样，接下来的每次运行都不需要再次编译了，这大大提高PHP运行速度。PHP数据缓存运用于PHP实际开发之中针对数据处理进行缓存，主要两大方向为：针对数据库数据进行缓存和针对PHP模板数据进行缓存。</p>
 
-<p>session的工作原理</p>
+<h2 id="php">2.php编译缓存</h2>
 
-<ul>
-  <li>当一个session第一次被启用时，一个唯一的标识被存储于本地的cookie中。</li>
-  <li>首先使用session_start()函数，PHP从session仓库中加载已经存储的session变量。</li>
-  <li>当执行PHP脚本时，通过使用session_register()函数注册session变量。</li>
-  <li>当PHP脚本执行结束时，未被销毁的session变量会被自动保存在本地一定路径下的session库中，这个路径可以通过php.ini文件中的session.save_path指定，下次浏览网页时可以加载使用。</li>
-</ul>
+<p>目前最常见的PHP编译缓存工具有：APC，Accelerator，xcache（国产）等。
+PHP是一种解释型语言，在PHP语言执行代码的时候，需要下面两步：</p>
 
-<p>Session 通常用于执行以下操作</p>
+<ol>
+  <li>编译过程。PHP读取文件，并编译该文件，然后生成能够在Zend Engine虚拟机上执行的中间码。</li>
+  <li>执行过程。PHP直接执行中间码。</li>
+</ol>
 
-<ul>
-  <li>存储需要在整个用户会话过程中保持其状态的信息，例如登录信息或用户浏览 Web应用程序时需要的其它信息。</li>
-  <li>存储只需要在页重新加载过程中或按功能分组的一组页之间保持其状态的对象。</li>
-  <li>Session 的作用就是它在 Web服务器上保持用户的状态信息供在任何时间从任何设备上的页面进行访问。因为浏览器不需要存储任何这种信息，所以可以使用任何浏览器</li>
-</ul>
+<p>以下两种情况，会导致PHP运行程序代码效率低下：</p>
 
-<p>持久性方法的限制</p>
+<ol>
+  <li>即使PHP代码文件没有发生改变，也会被PHP重新编译。</li>
+  <li>如有引用文件，PHP也要花费时间重新编译这些被引用的文件。
+因此，需要PHP编译缓存工具对PHP程序的编译结果做缓存处理。这样，PHP程序只要编译一次，就不要重新再做无意义的编译了。</li>
+</ol>
 
-<ul>
-  <li>随着越来越多用户登录，Session 所需要的服务器内存量也会不断增加。</li>
-  <li>访问 Web应用程序的每个用户都生成一个单独的 Session 对象。每个 Session象的持续时间是用户访问的时间加上不活动的时间。</li>
-  <li>如果每个 Session 中保持许多对象，并且许多用户同时使用 Web应用程序（创建许多 Session），则用于 Session 持久性的服务器内存量可能会很大，从而影响了可伸缩性。</li>
-</ul>
+<h2 id="php-1">3.php数据缓存</h2>
 
-<p>Php如何创建Session</p>
+<p>PHP的数据缓存包括针对数据库数据进行缓存和针对PHP模板数据进行缓存。针对数据库数据进行缓存的工具有memcache等。针对PHP模板数据进行缓存的工具主要有smarty等。</p>
 
-<p>开始介绍如何创建 session。非常简单，真的。
-启动 session 会话，并创建一个 $admin变量：</p>
+<h2 id="php-2">4.php缓存类型</h2>
 
-<pre><code>// 启动 session
-session_start();
+<p>一. 数据库数据缓存技术：</p>
 
-// 声明一个名为 admin 的变量，并赋空值。
-$_session["admin"] = null;
-</code></pre>
+<p>数据缓存：这里所说的数据缓存是指数据库查询PHP缓存机制，每次访问页面的时候,都会先检测相应的缓存数据是否存在，如果不存在，就连接数据库，得到数据，并把查询结果序列化后保存到文件中，以后同样的查询结果就直接从缓存表或文件中获得。</p>
 
-<p>如果你使用了 Session，或者该 PHP 文件要调用 Session变量，那么就必须在调用 Session 之前启动它，使用 session_start() 函数。其它都不需要你设置了，PHP 自动完成 session 文件的创建。
-执行完这个程序后，我们可以到系统临时文件夹找到这个 session 文件，一般文件名形如：sess_4c83638b3b0dbf65583181c2f89168ec，后面是 32 位编码后的随机字符串。用编辑器打开它，看一下它的内容：</p>
+<p>用的最广的例子看Discuz的搜索功能，把结果ID缓存到一个表中，下次搜索相同关键字时先搜索缓存表。和memcache技术。</p>
 
-<pre><code>admin|N;
-</code></pre>
+<p>举个常用的方法，多表关联的时候，把附表中的内容生成数组保存到主表的一个字段中，需要的时候数组分解一下，这样的好处是只读一个表，坏处就是两个数据同步会多不少步骤，数据库永远是瓶颈，用硬盘换速度，是这个的关键点。</p>
 
-<p>Session是什么呢?简单来说就是服务器给客户端的一个编号。当一台WWW服务器运行时，可能有若干个用户浏览正在运行这台服务器上的网站。当每个用户首次与这台WWW服务器建立连接时，他就与这个服务器建立了一个Session，同时服务器会自动为其分配一个SessionID，用以标识这个用户的唯一身份。这个SessionID是由WWW服务器随机产生的一个由24个字符组成的字符串，我们会在下面的实验中见到它的实际样子。
-这个唯一的SessionID是有很大的实际意义的。当一个用户提交了表单时，浏览器会将用户的SessionID自动附加在HTTP头信息中，(这是浏览器的自动功能，用户不会察觉到)，当服务器处理完这个表单后，将结果返回给SessionID所对应的用户。试想，如果没有SessionID，当有两个用户同时进行注册时，服务器怎样才能知道到底是哪个用户提交了哪个表单呢。</p>
+<p>常用的数据库数据缓存技术有：</p>
 
-<h2 id="cookie">cookie</h2>
+<ol>
+  <li>序列化（串行化）缓存</li>
+  <li>JSON缓存</li>
+  <li>XML缓存</li>
+  <li>Array缓存</li>
+</ol>
 
-<p>Cookie 是在 HTTP 协议下，服务器或脚本可以维护客户工作站上信息的一种方式。Cookie 是由 Web 服务器保存在用户浏览器（客户端）上的小文本文件，它可以包含有关用户的信息。无论何时用户链接到服务器，Web 站点都可以访问 Cookie 信息。</p>
+<p>二. 页面缓存：</p>
 
-<p>主要用途</p>
+<p>每次访问页面的时候，都会先检测相应的缓存页面文件是否存在，如果不存在，就连接数据库，得到数据，显示页面并同时生成缓存页面文件，这样下次访问的时候页面文件就发挥作用了。(模板引擎和网上常见的一些PHP缓存机制类通常有此功能，例如smarty模板、thinkphp框架)</p>
 
-<p>服务器可以利用Cookies包含信息的任意性来筛选并经常性维护这些信息，以判断在HTTP传输中的状态。Cookies最典型的应用是判定注册用户是否已经登录网站，用户可能会得到提示，是否在下一次进入此网站时保留用户信息以便简化登录手续，这些都是Cookies的功用。另一个重要应用场合是“购物车”之类处理。用户可能会在一段时间内在同一家网站的不同页面中选择不同的商品，这些信息都会写入Cookies，以便在最后付款时提取信息。</p>
+<h2 id="section-1">5.技术特点</h2>
 
-<p>用户可以改变浏览器的设置，以使用或者禁用Cookies</p>
+<p>1.时间触发缓存：</p>
 
-<p>cookie具体使用方法</p>
+<p>检查文件是否存在并且时间戳小于设置的过期时间,如果文件修改的时间戳比当前时间戳减去过期时间戳大，那么就用缓存，否则更新缓存。</p>
 
-<p>简单的：</p>
+<p>2.内容触发缓存：</p>
 
-<pre><code>SetCookie("MyCookie","Value of MyCookie");
-</code></pre>
+<p>当插入数据或更新数据时，强制更新PHP缓存机制。</p>
 
-<p>带失效时间的：</p>
+<p>3.静态缓存：</p>
 
-<pre><code>SetCookie("WithExpire","Expire in 1 hour",time()+3600);//3600秒=1小时
-</code></pre>
-
-<p>如果要设置同名的多个Cookie，要用数组，方法是：</p>
-
-<pre><code>SetCookie("CookieArray[]","Value 1");
-SetCookie("CookieArray[]","Value 2");
-</code></pre>
-
-<p>或
-    SetCookie(“CookieArray[0]”,”Value 1”);
-    SetCookie(“CookieArray[1]”,”Value 2”);</p>
-
-<p>接收和处理Cookie</p>
-
-<h2 id="cookie-session-">cookie 和session 的区别：</h2>
-
-<p>1、cookie数据存放在客户的浏览器上，session数据放在服务器上。</p>
-
-<p>2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
-   考虑到安全应当使用session。</p>
-
-<p>3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
-   考虑到减轻服务器性能方面，应当使用COOKIE。</p>
-
-<p>4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</p>
-
-<p>5、所以个人建议：
-   将登陆信息等重要信息存放为SESSION
-   其他信息如果需要保留，可以放在COOKIE中</p>
-
+<p>这里所说的静态缓存是指静态化，直接生成HTML或XML等文本文件，有更新的时候重生成一次，适合于不太变化的页面，这就不说了。。
+(注：具体缓存将在后面的博客中依次讲解)</p>
 
     <div id="disqus_container">
   <div class="share-con">
     <script type="text/javascript" charset="utf-8">
       (function(){
         var param = {
-          url: 'http://beiyuu.com/session-cookie',
+          url: 'http://beiyuu.com/php-cache',
           type: '6',
-          title: '《session与cookie》' + '- 总结一下什么是session,什么是cookie,以及session与cookie的区别',
+          title: '《php缓存技术》' + '- 现在日益庞大的网站，访问量越来越大，对网站服务器造成的压力也越来越大，缓存技术的使用可以大大的解决这些问题，今天就让我们来一起学习php的缓存技术。',
           ralateUid: '1855270953',
           rnd:new Date().valueOf()
         }
