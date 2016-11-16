@@ -1,0 +1,1777 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Likai的博客</title>
+    <description></description>
+    <link>http://beiyuu.com/</link>
+    <atom:link href="http://beiyuu.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 16 Nov 2016 09:37:38 +0800</pubDate>
+    <lastBuildDate>Wed, 16 Nov 2016 09:37:38 +0800</lastBuildDate>
+    <generator>Jekyll v3.0.0</generator>
+    
+      <item>
+        <title>回车、换行、和文件末尾空行</title>
+        <description>&lt;h2 id=&quot;section&quot;&gt;回车和换行&lt;/h2&gt;
+
+&lt;p&gt;回车 (Carriage Return) 和换行 (Line Feed) 的区别，&lt;a href=&quot;http://stackoverflow.com/questions/1761051/difference-between-n-and-r&quot;&gt;这里&lt;/a&gt;有一个历史原因可参考：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;在计算机还没有出现之前，有一种叫做电传打字机（Teletype Model 33）的玩意，每秒钟可以打10个字符。但是它有一个问题，就是打完一行换行的时候，要用去0.2秒，正好可以打两个字符。要是在这0.2秒里面，又有新的字符传过来，那么这个字符将丢失。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;于是，研制人员想了个办法解决这个问题，就是在每行后面加两个表示结束的字符。一个叫做”回车”，告诉打字机把打印头定位在左边界；另一个叫做”换行”，告诉打字机把纸向下移一行。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;发明计算机时，这个概念被沿用下来，但因为条件的限制和设计者的喜好，有了一些分歧：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Unix 系统里，每行结尾只有”&lt;换行&gt;&quot;，即&quot;\n&quot;&lt;/换行&gt;&lt;/li&gt;
+  &lt;li&gt;Windows 系统里面，每行结尾是”&lt;回车&gt;&lt;换行&gt;&quot;，即&quot;\r\n&quot;&lt;/换行&gt;&lt;/回车&gt;&lt;/li&gt;
+  &lt;li&gt;在老的 Mac 系统里，每行结尾是”&lt;回车&gt;&quot;，即&quot;\r&quot;&lt;/回车&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我们来验证一下，我在 Windows 下用记事本新建一个文本文件，它的二进制编码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//源文件内容
+hello
+hello2
+
+//二进制内容
+0000000: 6865 6c6c 6f0d 0a68 656c 6c6f 32         hello..hello2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同样在 Mac 下用 Vim 新建一个：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//源文件内容
+hello
+hello2
+
+//二进制内容
+0000000: 6865 6c6c 6f0a 6865 6c6c 6f32 0a         hello.hello2.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;0a&lt;/code&gt;是 LF 的 ASCII 编码, &lt;code&gt;0d&lt;/code&gt;是 CR 的 ASCII 编码。区别很明显了&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Mac 下的文本文件在 Windows 下打开会成为一行，因为 Windows 只认识&lt;code&gt;\r\n&lt;/code&gt;，也就是&lt;code&gt;0d0a&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Windows 下的文本文件在 Mac 下打开，Vim 中会在每行末尾显示一个 &lt;code&gt;^M&lt;/code&gt;，(不是两个字符组成的)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;文件末尾空行&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/zh-sg/POSIX&quot;&gt;POSIX&lt;/a&gt;对行的&lt;a href=&quot;http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_206&quot;&gt;定义&lt;/a&gt;如下：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;3.206 Line&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A sequence of zero or more non- &amp;lt;newline&amp;gt; characters plus a terminating &amp;lt;newline&amp;gt; character.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;行是由0个或者多个非 “换行” 符的字符组成，并且以 “换行” 符结尾。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这样做有什么好处呢，举个例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//hello.c
+#include head.h
+print(&#39;hello&#39;)
+
+//world.c
+#include tail.h
+print(&#39;hello&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果这两个文件都按 POSIX 规范来写， 在&lt;code&gt;cat *.c&lt;/code&gt;之后，是没有问题的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//cat.c
+
+#include head.h
+print(&#39;hello&#39;)
+#include tail.h
+print(&#39;hello&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果缺少最后一行的换行符（如 Windows 文件那样的定义），&lt;code&gt;cat&lt;/code&gt;之后，就有问题了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//error.c
+
+#include head.h
+print(&#39;hello&#39;)#include tail.h
+print(&#39;hello&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以，从这点去理解 POSIX 对行的定义，非常合理，对于任意文件的拼接，也各自保持了文件的完整性。&lt;/p&gt;
+
+&lt;p&gt;不遵守标准带来的则是：在一些编辑器下面，比如 Sublime，他把&lt;code&gt;\n&lt;/code&gt;的当做了行之间的分隔符，于是文件最后一行的&lt;code&gt;\n&lt;/code&gt;就看上去成了一个新的空行，这就是错误解读标准造成的，拼接文件时也会产生不必要的麻烦，比如上例。&lt;/p&gt;
+
+&lt;h2 id=&quot;no-new-line-at-end-of-file&quot;&gt;\ No new line at end of file&lt;/h2&gt;
+
+&lt;p&gt;基于上面的原因，再去看 git diff 的&lt;code&gt;\ No new line at end of file&lt;/code&gt;信息，就很好解释了。&lt;/p&gt;
+
+&lt;p&gt;各编辑器对于换行符的理解偏差，导致的文件确实发生了变化，多了或少了最后的&lt;code&gt;0a&lt;/code&gt;，那么对于 diff 程序来说，这当然是不可忽略的，但因为&lt;code&gt;0a&lt;/code&gt;是不可见字符，并且是长久以来的历史原因，所以 diff 程序有个专门的标记来说明这个变化，就是：&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;\ No new line at end of file&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;各编辑器也有相应的办法去解决这个问题，比如 Sublime，在&lt;code&gt;Default/Preferences.sublime-settings&lt;/code&gt;中设置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Set to true to ensure the last line of the file ends in a newline
+// character when saving
+&quot;ensure_newline_at_eof_on_save&quot;: true,
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以，请遵守规范。&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 18 May 2016 00:00:00 +0800</pubDate>
+        <link>http://beiyuu.com/carriage-return-line-feed-new-line-end-file-%E5%89%AF%E6%9C%AC-%E5%89%AF%E6%9C%AC</link>
+        <guid isPermaLink="true">http://beiyuu.com/carriage-return-line-feed-new-line-end-file-%E5%89%AF%E6%9C%AC-%E5%89%AF%E6%9C%AC</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>PDO学习与使用</title>
+        <description>&lt;h2 id=&quot;pdo&quot;&gt;1.安装PDO&lt;/h2&gt;
+
+&lt;p&gt;数据库抽象层 PDO - PHP Data Object 扩展类库为 PHP 访问数据库定义了一个轻量级的、一致性的接口，它提供了一个数据访问抽象层，针对不同的数据库服务器使用特定的 PDO 驱动程序访问，如图：
+&lt;img src=&quot;http://images.cnitblog.com/blog/534303/201411/121828301162782.jpg&quot; alt=&quot;&quot; /&gt;
+Windows 环境下 PHP 5.1 以上版本通过编辑 php.ini文件来安装 PDO：去掉 extension=php_pdo.dll 前面的 ;&lt;/p&gt;
+
+&lt;p&gt;如果使用的数据库是 MySQL ，在 php.ini 文件中加载 MySQL 的 PDO 驱动：&lt;/p&gt;
+
+&lt;p&gt;添加 extension=php_pdo_mysql.dll 或者去掉该句前面的 ;&lt;/p&gt;
+
+&lt;p&gt;查看可用的 PDO 驱动程序，可以编写 php 文件进行查看：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php 
+phpinfo(); 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如图：
+&lt;img src=&quot;http://images.cnitblog.com/blog/534303/201411/121833003976054.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;pdo-1&quot;&gt;2.创建PDO对象&lt;/h2&gt;
+
+&lt;p&gt;PDO 对象中的成员方法是统一各种数据库的访问接口，在使用 PDO 与数据库交互之前，要创建 PDO 对象。在 PDO 的构造方法中，有 4 个参数：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;数据源名 DSN，用来定义一个确定的数据库和必须用到的驱动程序&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;连接数据库的用户名&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;连接数据库的密码，是可选参数&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;连接所需的所有额外选项，是可选参数&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;以 MySQL 为例，创建一个 PDO 对象：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//数据源名(DSN)
+$dsn = &#39;mysql:dbname=test;host=127.0.0.1&#39;;
+
+$user = &quot;root&quot;;
+$pwd = &quot;&quot;;
+$opt = array(PDO::MYSQL_ATTR_INIT_COMMAND =&amp;gt; &quot;set names utf8&quot;);
+$dbh = new PDO($dsn,$user,$pwd,$opt);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里的第四个参数表示：向客户端发送的 SQL 语句中使用 UTF8 字符集，同时服务器发送回客户端的结果也是用 UTF8 字符集。&lt;/p&gt;
+
+&lt;h2 id=&quot;sql&quot;&gt;3.执行sql语句&lt;/h2&gt;
+
+&lt;p&gt;当执行 insert、update、delete 等没有结果集的查询时，使用 PDO 的 exec() 方法执行，执行成功后将返回受影响的行数。该方法不能用于 select 查询：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+ 
+//数据源名(DSN)
+$dsn = &#39;mysql:dbname=test;host=127.0.0.1&#39;;
+$user = &quot;root&quot;;
+$pwd = &quot;&quot;;
+//第4个参数
+$opt = array(PDO::MYSQL_ATTR_INIT_COMMAND =&amp;gt; &quot;set names utf8&quot;);
+ 
+try{
+ 
+    $dbh = new PDO($dsn,$user,$pwd,$opt);
+
+ }catch(PDOException $e){
+ 
+     echo &quot;数据库连接失败： &quot;.$e-&amp;gt;getMessage();
+     exit;
+ }
+ 
+ $query = &quot;update archives set title = &#39;白夜行&#39; where title = &#39;花的圆舞曲_3&#39;&quot;; 
+ 
+ //使用exec()方法执行insert，update，delete等
+ $affected = $dbh-&amp;gt;exec($query);
+ 
+ if($affected){
+ 
+echo &#39;数据表archives中受影响的行数为：&#39;.$affected;
+ 
+ }else{
+ 
+   print_r($dbh-&amp;gt;errorInfo());
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当执行返回结果集的 select 查询时，或者所影响的行数无关紧要时，应当使用 PDO 对象中的 query() 方法，如果该方法成功执行所制定的查询，则返回一个 PDOStatement 对象，并且可以使用 PDOStatement 对象的 rowCount() 方法获取获取的数据行数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+  
+//数据源名(DSN)
+$dsn = &#39;mysql:dbname=test;host=127.0.0.1&#39;;
+$user = &quot;root&quot;;
+$pwd = &quot;&quot;;
+//第4个参数
+$opt = array(PDO::MYSQL_ATTR_INIT_COMMAND =&amp;gt; &quot;set names utf8&quot;);
+  
+try{
+ 
+ $dbh = new PDO($dsn,$user,$pwd,$opt);
+ $dbh-&amp;gt;setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+ 
+}catch(PDOException $e){
+ 
+ echo &quot;数据库连接失败： &quot;.$e-&amp;gt;getMessage();
+ exit;
+}
+ 
+$query = &quot;select * from archives where title=&#39;白夜行&#39;&quot;; 
+ 
+try{
+ 
+ //执行select查询，并返回PDOstatement对象
+ $pdostatement = $dbh-&amp;gt;query($query);
+ echo &quot;一共从表中获取到&quot;.$pdostatement-&amp;gt;rowCount().&quot; 条记录:&amp;lt;br&amp;gt;&quot;;
+foreach($pdostatement as $row){
+ 
+     echo $row[&#39;aid&#39;].&quot;&amp;lt;br&amp;gt;&quot;;
+ }
+}catch(PDOException $e){
+ 
+ echo $e-&amp;gt;getMessage();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;pdo--sql--pdo--quote-&quot;&gt;5. 使用 PDO 过滤特殊字符，防止 SQL 注入，可以使用 PDO 的 quote() 方法：&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$query = &quot;select * from user where uname=&quot;.$dbh-&amp;gt;quote($_POST[&#39;uname&#39;]).&quot; and pwd=&quot;.$dbh-&amp;gt;quote($_POST[&#39;pwd&#39;]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;PDO的知识点还是非常多的，大家参考 &lt;a href=&quot;http://www.5idev.com/p-php_pdo_query.shtml&quot;&gt;http://www.5idev.com/p-php_pdo_query.shtml&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 23 Mar 2015 00:00:00 +0800</pubDate>
+        <link>http://beiyuu.com/pdo-mysql</link>
+        <guid isPermaLink="true">http://beiyuu.com/pdo-mysql</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>linux</title>
+        <description>&lt;h2 id=&quot;svn&quot;&gt;安装SVN客户端&lt;/h2&gt;
+
+&lt;p&gt;使用SVN进行文件上传前，请在您的本地PC上安装SVN客户端。推荐使用1.7版本的SVN客户端。请不要升级到1.8版本，1.8版本存在缺陷，可能会导致SVN同步异常。&lt;/p&gt;
+
+&lt;p&gt;SVN客户端下载：http://subversion.apache.org/download/&lt;/p&gt;
+
+&lt;p&gt;SVN中文简介：http://www.subversion.org.cn/?action-channel-name-product&lt;/p&gt;
+
+&lt;p&gt;SVN手册：http://svndoc.iusesvn.com/&lt;/p&gt;
+
+&lt;h2 id=&quot;svn-1&quot;&gt;创建本地目录并连接到SVN库&lt;/h2&gt;
+
+&lt;p&gt;从SVN库中checkout该应用所有WebService下的所有版本的代码到本地，即在本地机器上为该应用创建了一个应用的根目录：[AppID]，以及该应用下所有Web服务以及Web服务下的所有版本的目录。
+当然，在您还没有上传任何代码到SVN库之前，这里checkout出来的只是目录，版本目录下是没有文件的（除了自动生成的.svny文件夹以及index.html ）。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;checkout的命令如下：&lt;/p&gt;
+
+    &lt;p&gt;//你可能需要了解如何获取SVN仓库地址 svn checkout [SVN库地址]&lt;/p&gt;
+
+    &lt;p&gt;示例：
+ svn checkout https://svn.opencloud.qq.com/10507&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;输入上述命令后，需要检验该SVN库的用户名和密码（即应用的云服务账号和密码，您可能需要了解如何查看云服务账号和密码）。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;提交文件&lt;/h2&gt;
+
+&lt;p&gt;将您需要部署的程序复制到对应的目录下，然后使用add命令增加到SVN库，最后使用commit命令提交到SVN库。
+例如您需要将文件夹“test”部署到Web服务“PyNormal”下的版本“1”里，则需要将“test”复制（请使用-rf，强行复制目录以及目录下的文件）到“10507/PyNormal/1”目录下。如下所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd 10507/PyNormal/1
+cp -rf /dev/test/* ./
+svn add ./*
+svn commit -m&quot;add test&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;修改文件&lt;/h2&gt;
+
+&lt;p&gt;您可以直接在本地使用编辑器打开SVN工作目录下的某个文件并进行修改，修改完成后，试用commit命令提交即可。
+例如您对“10507/PyNormal/1”目录下的某个文件“index.php”使用Vim命令进行了修改并提交。如下所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd 10507/PyNormal/1
+vim index.html
+svn commit -m &quot;edit index.html&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;删除文件&lt;/h2&gt;
+
+&lt;p&gt;步骤如下：
+1. 进入本地待删除文件的目录。
+2. 用delete命令删除。
+3. 用commit命令进行提交。&lt;/p&gt;
+
+&lt;p&gt;例如要删除12345/ws/1/a.text文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd 12345/ws/1
+
+svn delete a.text
+
+svn commit -m &quot;delete a.text&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;linux&quot;&gt;linux常用命令&lt;/h2&gt;
+
+&lt;p&gt;1、cd命令&lt;/p&gt;
+
+&lt;p&gt;这是一个非常基本，也是大家经常需要使用的命令，它用于切换当前目录，它的参数是要切换到的目录的路径，可以是绝对路径，也可以是相对路径。如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /root/Docements # 切换到目录/root/Docements  
+cd ./path          # 切换到当前目录下的path目录中，“.”表示当前目录    
+cd ../path         # 切换到上层目录中的path目录中，“..”表示上一层目录  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2、ls命令&lt;/p&gt;
+
+&lt;p&gt;这是一个非常有用的查看文件与目录的命令，list之意，它的参数非常多，下面就列出一些我常用的参数吧，如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-l ：列出长数据串，包含文件的属性与权限数据等  
+-a ：列出全部的文件，连同隐藏文件（开头为.的文件）一起列出来（常用）  
+-d ：仅列出目录本身，而不是列出目录的文件数据  
+-h ：将文件容量以较易读的方式（GB，kB等）列出来  
+-R ：连同子目录的内容一起列出（递归列出），等于该目录下的所有文件都会显示出来  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注：这些参数也可以组合使用，下面举两个例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -l #以长数据串的形式列出当前目录下的数据文件和目录  
+ls -lR #以长数据串的形式列出当前目录下的所有文件  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、grep命令&lt;/p&gt;
+
+&lt;p&gt;该命令常用于分析一行的信息，若当中有我们所需要的信息，就将该行显示出来，该命令通常与管道命令一起使用，用于对一些命令的输出进行筛选加工等等，它的简单语法为&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;grep [-acinv] [--color=auto] &#39;查找字符串&#39; filename  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;它的常用参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-a ：将binary文件以text文件的方式查找数据  
+-c ：计算找到‘查找字符串’的次数  
+-i ：忽略大小写的区别，即把大小写视为相同  
+-v ：反向选择，即显示出没有‘查找字符串’内容的那一行  
+# 例如：  
+# 取出文件/etc/man.config中包含MANPATH的行，并把找到的关键字加上颜色  
+grep --color=auto &#39;MANPATH&#39; /etc/man.config  
+# 把ls -l的输出中包含字母file（不区分大小写）的内容输出  
+ls -l | grep -i file  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、find命令&lt;/p&gt;
+
+&lt;p&gt;find是一个基于查找的功能非常强大的命令，相对而言，它的使用也相对较为复杂，参数也比较多，所以在这里将给把它们分类列出，它的基本语法如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 与时间有关的参数：  
+-mtime n : n为数字，意思为在n天之前的“一天内”被更改过的文件；  
+-mtime +n : 列出在n天之前（不含n天本身）被更改过的文件名；  
+-mtime -n : 列出在n天之内（含n天本身）被更改过的文件名；  
+-newer file : 列出比file还要新的文件名  
+# 例如：  
+find /root -mtime 0 # 在当前目录下查找今天之内有改动的文件  
+  
+# 与用户或用户组名有关的参数：  
+-user name : 列出文件所有者为name的文件  
+-group name : 列出文件所属用户组为name的文件  
+-uid n : 列出文件所有者为用户ID为n的文件  
+-gid n : 列出文件所属用户组为用户组ID为n的文件  
+# 例如：  
+find /home/ljianhui -user ljianhui # 在目录/home/ljianhui中找出所有者为ljianhui的文件  
+  
+# 与文件权限及名称有关的参数：  
+-name filename ：找出文件名为filename的文件  
+-size [+-]SIZE ：找出比SIZE还要大（+）或小（-）的文件  
+-tpye TYPE ：查找文件的类型为TYPE的文件，TYPE的值主要有：一般文件（f)、设备文件（b、c）、  
+             目录（d）、连接文件（l）、socket（s）、FIFO管道文件（p）；  
+-perm mode ：查找文件权限刚好等于mode的文件，mode用数字表示，如0755；  
+-perm -mode ：查找文件权限必须要全部包括mode权限的文件，mode用数字表示  
+-perm +mode ：查找文件权限包含任一mode的权限的文件，mode用数字表示  
+# 例如：  
+find / -name passwd # 查找文件名为passwd的文件  
+find . -perm 0755 # 查找当前目录中文件权限的0755的文件  
+find . -size +12k # 查找当前目录中大于12KB的文件，注意c表示byte  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5、cp命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于复制文件，copy之意，它还可以把多个文件一次性地复制到一个目录下，它的常用参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-a ：将文件的特性一起复制  
+-p ：连同文件的属性一起复制，而非使用默认方式，与-a相似，常用于备份  
+-i ：若目标文件已经存在时，在覆盖时会先询问操作的进行  
+-r ：递归持续复制，用于目录的复制行为  
+-u ：目标文件与源文件有差异时才会复制  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;例如 ：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cp -a file1 file2 #连同文件的所有特性把文件file1复制成文件file2  
+cp file1 file2 file3 dir #把文件file1、file2、file3复制到目录dir中  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;6、mv命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于移动文件、目录或更名，move之意，它的常用参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-f ：force强制的意思，如果目标文件已经存在，不会询问而直接覆盖  
+-i ：若目标文件已经存在，就会询问是否覆盖  
+-u ：若目标文件已经存在，且比目标文件新，才会更新  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注：该命令可以把一个文件或多个文件一次移动一个文件夹中，但是最后一个目标文件一定要是“目录”。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mv file1 file2 file3 dir # 把文件file1、file2、file3移动到目录dir中  
+mv file1 file2 # 把文件file1重命名为file2  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;7、rm命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于删除文件或目录，remove之间，它的常用参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-f ：就是force的意思，忽略不存在的文件，不会出现警告消息  
+-i ：互动模式，在删除前会询问用户是否操作  
+-r ：递归删除，最常用于目录删除，它是一个非常危险的参数  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rm -i file # 删除文件file，在删除之前会询问是否进行该操作  
+rm -fr dir # 强制删除目录dir中的所有文件  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;8、ps命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于将某个时间点的进程运行情况选取下来并输出，process之意，它的常用参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-A ：所有的进程均显示出来  
+-a ：不与terminal有关的所有进程  
+-u ：有效用户的相关进程  
+-x ：一般与a参数一起使用，可列出较完整的信息  
+-l ：较长，较详细地将PID的信息列出  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其实我们只要记住ps一般使用的命令参数搭配即可，它们并不多，如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ps aux # 查看系统所有的进程数据  
+ps ax # 查看不与terminal有关的所有进程  
+ps -lA # 查看系统所有的进程数据  
+ps axjf # 查看连同一部分进程树状态  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;9、kill命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于向某个工作（%jobnumber）或者是某个PID（数字）传送一个信号，它通常与ps和jobs命令一起使用，它的基本语法如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kill -signal PID 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;signal的常用参数如下：
+注：最前面的数字为信号的代号，使用时可以用代号代替相应的信号。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1：SIGHUP，启动被终止的进程  
+2：SIGINT，相当于输入ctrl+c，中断一个程序的进行  
+9：SIGKILL，强制中断一个进程的进行  
+15：SIGTERM，以正常的结束进程方式来终止进程  
+17：SIGSTOP，相当于输入ctrl+z，暂停一个进程的进行  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 以正常的结束进程方式来终于第一个后台工作，可用jobs命令查看后台中的第一个工作进程  
+kill -SIGTERM %1   
+# 重新改动进程ID为PID的进程，PID可用ps命令通过管道命令加上grep命令进行筛选获得  
+kill -SIGHUP PID  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;10、killall命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于向一个命令启动的进程发送一个信号，它的一般语法如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;killall [-iIe] [command name]  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;它的参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-i ：交互式的意思，若需要删除时，会询问用户  
+-e ：表示后面接的command name要一致，但command name不能超过15个字符  
+-I ：命令名称忽略大小写  
+# 例如：  
+killall -SIGHUP syslogd # 重新启动syslogd 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;11、file命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于判断接在file命令后的文件的基本数据，因为在Linux下文件的类型并不是以后缀为分的，所以这个命令对我们来说就很有用了，它的用法非常简单，基本语法如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file filename  
+#例如：  
+file ./test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;12、tar命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于对文件进行打包，默认情况并不会压缩，如果指定了相应的参数，它还会调用相应的压缩程序（如gzip和bzip等）进行压缩和解压。它的常用参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-c ：新建打包文件  
+-t ：查看打包文件的内容含有哪些文件名  
+-x ：解打包或解压缩的功能，可以搭配-C（大写）指定解压的目录，注意-c,-t,-x不能同时出现在同一条命令中  
+-j ：通过bzip2的支持进行压缩/解压缩  
+-z ：通过gzip的支持进行压缩/解压缩  
+-v ：在压缩/解压缩过程中，将正在处理的文件名显示出来  
+-f filename ：filename为要处理的文件  
+-C dir ：指定压缩/解压缩的目录dir  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的解说可以已经让你晕过去了，但是通常我们只需要记住下面三条命令即可：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;压缩：tar -jcv -f filename.tar.bz2 要被处理的文件或目录名称  
+查询：tar -jtv -f filename.tar.bz2  
+解压：tar -jxv -f filename.tar.bz2 -C 欲解压缩的目录  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注：文件名并不定要以后缀tar.bz2结尾，这里主要是为了说明使用的压缩程序为bzip2&lt;/p&gt;
+
+&lt;p&gt;13、cat命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于查看文本文件的内容，后接要查看的文件名，通常可用管道与more和less一起使用，从而可以一页页地查看数据。例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cat text | less # 查看text文件中的内容  
+# 注：这条命令也可以使用less text来代替  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;14、chgrp命令
+该命令用于改变文件所属用户组，它的使用非常简单，它的基本用法如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;chgrp [-R] dirname/filename  
+-R ：进行递归的持续对所有文件和子目录更改  
+# 例如：  
+chgrp users -R ./dir # 递归地把dir目录下中的所有文件和子目录下所有文件的用户组修改为users 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;15、chown命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于改变文件的所有者，与chgrp命令的使用方法相同，只是修改的文件属性不同，不再详述。&lt;/p&gt;
+
+&lt;p&gt;16、chmod命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于改变文件的权限，一般的用法如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;chmod [-R] xyz 文件或目录  
+-R：进行递归的持续更改，即连同子目录下的所有文件都会更改  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同时，chmod还可以使用u（user）、g（group）、o（other）、a（all）和+（加入）、-（删除）、=（设置）跟rwx搭配来对文件的权限进行更改。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 例如：  
+chmod 0755 file # 把file的文件权限改变为-rxwr-xr-x  
+chmod g+w file # 向file的文件权限中加入用户组可写权限  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;18、vim命令&lt;/p&gt;
+
+&lt;p&gt;该命令主要用于文本编辑，它接一个或多个文件名作为参数，如果文件存在就打开，如果文件不存在就以该文件名创建一个文件。vim是一个非常好用的文本编辑器&lt;/p&gt;
+
+&lt;p&gt;19、gcc命令&lt;/p&gt;
+
+&lt;p&gt;对于一个用Linux开发C程序的人来说，这个命令就非常重要了，它用于把C语言的源程序文件，编译成可执行程序，由于g++的很多参数跟它非常相似，所以这里只介绍gcc的参数，它的常用参数如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-o ：output之意，用于指定生成一个可执行文件的文件名  
+-c ：用于把源文件生成目标文件（.o)，并阻止编译器创建一个完整的程序  
+-I ：增加编译时搜索头文件的路径  
+-L ：增加编译时搜索静态连接库的路径  
+-S ：把源文件生成汇编代码文件  
+-lm：表示标准库的目录中名为libm.a的函数库  
+-lpthread ：连接NPTL实现的线程库  
+-std= ：用于指定把使用的C语言的版本  
+  
+# 例如：  
+# 把源文件test.c按照c99标准编译成可执行程序test  
+gcc -o test test.c -lm -std=c99  
+#把源文件test.c转换为相应的汇编程序源文件test.s  
+gcc -S test.c  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;20、time命令&lt;/p&gt;
+
+&lt;p&gt;该命令用于测算一个命令（即程序）的执行时间。它的使用非常简单，就像平时输入命令一样，不过在命令的前面加入一个time即可，例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;time ./process  
+time ps aux  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在程序或命令运行结束后，在最后输出了三个时间，它们分别是：
+user：用户CPU时间，命令执行完成花费的用户CPU时间，即命令在用户态中执行时间总和；
+system：系统CPU时间，命令执行完成花费的系统CPU时间，即命令在核心态中执行时间总和；
+real：实际时间，从command命令行开始执行到运行终止的消逝时间；&lt;/p&gt;
+
+&lt;p&gt;注：用户CPU时间和系统CPU时间之和为CPU时间，即命令占用CPU执行的时间总和。实际时间要大于CPU时间，因为Linux是多任务操作系统，往往在执行一条命令时，系统还要处理其它任务。另一个需要注意的问题是即使每次执行相同命令，但所花费的时间也是不一样，其花费时间是与系统运行相关的。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 19 Mar 2015 00:00:00 +0800</pubDate>
+        <link>http://beiyuu.com/linux-svn</link>
+        <guid isPermaLink="true">http://beiyuu.com/linux-svn</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>session与cookie</title>
+        <description>&lt;h2 id=&quot;session&quot;&gt;session&lt;/h2&gt;
+
+&lt;p&gt;Session:在计算机中，尤其是在网络应用中，称为“会话控制”。Session 对象存储特定用户会话所需的属性及配置信息。这样，当用户在应用程序的 Web 页之间跳转时，存储在 Session 对象中的变量将不会丢失，而是在整个用户会话中一直存在下去。当用户请求来自应用程序的 Web 页时，如果该用户还没有会话，则 Web 服务器将自动创建一个 Session 对象。当会话过期或被放弃后，服务器将终止该会话。Session 对象最常见的一个用法就是存储用户的首选项。例如，如果用户指明不喜欢查看图形，就可以将该信息存储在 Session 对象中。&lt;/p&gt;
+
+&lt;p&gt;session的工作原理&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当一个session第一次被启用时，一个唯一的标识被存储于本地的cookie中。&lt;/li&gt;
+  &lt;li&gt;首先使用session_start()函数，PHP从session仓库中加载已经存储的session变量。&lt;/li&gt;
+  &lt;li&gt;当执行PHP脚本时，通过使用session_register()函数注册session变量。&lt;/li&gt;
+  &lt;li&gt;当PHP脚本执行结束时，未被销毁的session变量会被自动保存在本地一定路径下的session库中，这个路径可以通过php.ini文件中的session.save_path指定，下次浏览网页时可以加载使用。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Session 通常用于执行以下操作&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;存储需要在整个用户会话过程中保持其状态的信息，例如登录信息或用户浏览 Web应用程序时需要的其它信息。&lt;/li&gt;
+  &lt;li&gt;存储只需要在页重新加载过程中或按功能分组的一组页之间保持其状态的对象。&lt;/li&gt;
+  &lt;li&gt;Session 的作用就是它在 Web服务器上保持用户的状态信息供在任何时间从任何设备上的页面进行访问。因为浏览器不需要存储任何这种信息，所以可以使用任何浏览器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;持久性方法的限制&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;随着越来越多用户登录，Session 所需要的服务器内存量也会不断增加。&lt;/li&gt;
+  &lt;li&gt;访问 Web应用程序的每个用户都生成一个单独的 Session 对象。每个 Session象的持续时间是用户访问的时间加上不活动的时间。&lt;/li&gt;
+  &lt;li&gt;如果每个 Session 中保持许多对象，并且许多用户同时使用 Web应用程序（创建许多 Session），则用于 Session 持久性的服务器内存量可能会很大，从而影响了可伸缩性。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Php如何创建Session&lt;/p&gt;
+
+&lt;p&gt;开始介绍如何创建 session。非常简单，真的。
+启动 session 会话，并创建一个 $admin变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 启动 session
+session_start();
+
+// 声明一个名为 admin 的变量，并赋空值。
+$_session[&quot;admin&quot;] = null;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果你使用了 Session，或者该 PHP 文件要调用 Session变量，那么就必须在调用 Session 之前启动它，使用 session_start() 函数。其它都不需要你设置了，PHP 自动完成 session 文件的创建。
+执行完这个程序后，我们可以到系统临时文件夹找到这个 session 文件，一般文件名形如：sess_4c83638b3b0dbf65583181c2f89168ec，后面是 32 位编码后的随机字符串。用编辑器打开它，看一下它的内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;admin|N;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Session是什么呢?简单来说就是服务器给客户端的一个编号。当一台WWW服务器运行时，可能有若干个用户浏览正在运行这台服务器上的网站。当每个用户首次与这台WWW服务器建立连接时，他就与这个服务器建立了一个Session，同时服务器会自动为其分配一个SessionID，用以标识这个用户的唯一身份。这个SessionID是由WWW服务器随机产生的一个由24个字符组成的字符串，我们会在下面的实验中见到它的实际样子。
+这个唯一的SessionID是有很大的实际意义的。当一个用户提交了表单时，浏览器会将用户的SessionID自动附加在HTTP头信息中，(这是浏览器的自动功能，用户不会察觉到)，当服务器处理完这个表单后，将结果返回给SessionID所对应的用户。试想，如果没有SessionID，当有两个用户同时进行注册时，服务器怎样才能知道到底是哪个用户提交了哪个表单呢。&lt;/p&gt;
+
+&lt;h2 id=&quot;cookie&quot;&gt;cookie&lt;/h2&gt;
+
+&lt;p&gt;Cookie 是在 HTTP 协议下，服务器或脚本可以维护客户工作站上信息的一种方式。Cookie 是由 Web 服务器保存在用户浏览器（客户端）上的小文本文件，它可以包含有关用户的信息。无论何时用户链接到服务器，Web 站点都可以访问 Cookie 信息。&lt;/p&gt;
+
+&lt;p&gt;主要用途&lt;/p&gt;
+
+&lt;p&gt;服务器可以利用Cookies包含信息的任意性来筛选并经常性维护这些信息，以判断在HTTP传输中的状态。Cookies最典型的应用是判定注册用户是否已经登录网站，用户可能会得到提示，是否在下一次进入此网站时保留用户信息以便简化登录手续，这些都是Cookies的功用。另一个重要应用场合是“购物车”之类处理。用户可能会在一段时间内在同一家网站的不同页面中选择不同的商品，这些信息都会写入Cookies，以便在最后付款时提取信息。&lt;/p&gt;
+
+&lt;p&gt;用户可以改变浏览器的设置，以使用或者禁用Cookies&lt;/p&gt;
+
+&lt;p&gt;cookie具体使用方法&lt;/p&gt;
+
+&lt;p&gt;简单的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SetCookie(&quot;MyCookie&quot;,&quot;Value of MyCookie&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;带失效时间的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SetCookie(&quot;WithExpire&quot;,&quot;Expire in 1 hour&quot;,time()+3600);//3600秒=1小时
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果要设置同名的多个Cookie，要用数组，方法是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SetCookie(&quot;CookieArray[]&quot;,&quot;Value 1&quot;);
+SetCookie(&quot;CookieArray[]&quot;,&quot;Value 2&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或
+    SetCookie(“CookieArray[0]”,”Value 1”);
+    SetCookie(“CookieArray[1]”,”Value 2”);&lt;/p&gt;
+
+&lt;p&gt;接收和处理Cookie&lt;/p&gt;
+
+&lt;h2 id=&quot;cookie-session-&quot;&gt;cookie 和session 的区别：&lt;/h2&gt;
+
+&lt;p&gt;1、cookie数据存放在客户的浏览器上，session数据放在服务器上。&lt;/p&gt;
+
+&lt;p&gt;2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
+   考虑到安全应当使用session。&lt;/p&gt;
+
+&lt;p&gt;3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
+   考虑到减轻服务器性能方面，应当使用COOKIE。&lt;/p&gt;
+
+&lt;p&gt;4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。&lt;/p&gt;
+
+&lt;p&gt;5、所以个人建议：
+   将登陆信息等重要信息存放为SESSION
+   其他信息如果需要保留，可以放在COOKIE中&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 23 Feb 2015 00:00:00 +0800</pubDate>
+        <link>http://beiyuu.com/session-cookie</link>
+        <guid isPermaLink="true">http://beiyuu.com/session-cookie</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>php之面向对象</title>
+        <description>&lt;h2 id=&quot;section&quot;&gt;面向对象的基本概念&lt;/h2&gt;
+
+&lt;p&gt;这里所指的面向对象，准确的说应该叫做面向对象编程(OOP),是面向对象的一部分。面向对象包括3部分内容：面向对象分析(OOA)、面向对象设计(OOD),以及面向对象编程(OOP),面向对象编程的两个重要概念是类和对象。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;类&lt;/h2&gt;
+
+&lt;p&gt;类是属相和方法的集合，是面向对象编程的核心和基础，通过类可以将零散的用于实现某项功能的代码进行有效管理。例如创建一个运动类，包括5个属性：姓名、身高、体重、年龄和性别。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;对象&lt;/h2&gt;
+
+&lt;p&gt;对象时类进行实例化后的产物，是一个实体。我们可以这样理解对象和类的关系：对象实际上就是”有血有肉的能摸得到看的到的”一个类。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;面向对象编程的三大特点&lt;/h2&gt;
+
+&lt;p&gt;三大特性是：封装,继承,多态&lt;/p&gt;
+
+&lt;p&gt;所谓封装，也就是把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。封装是面向对象的特征之一，是对象和类概念的主要特性。 简单的说，一个类就是一个封装了数据以及操作这些数据的代码的逻辑实体。在一个对象内部，某些代码或某些数据可以是私有的，不能被外界访问。通过这种方式，对象对内部数据提供了不同级别的保护，以防止程序中无关的部分意外的改变或错误的使用了对象的私有部分。&lt;/p&gt;
+
+&lt;p&gt;所谓继承是指可以让某个类型的对象获得另一个类型的对象的属性的方法。它支持按级分类的概念。继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。 通过继承创建的新类称为“子类”或“派生类”，被继承的类称为“基类”、“父类”或“超类”。继承的过程，就是从一般到特殊的过程。要实现继承，可以通过“继承”（Inheritance）和“组合”（Composition）来实现。继承概念的实现方式有二类：实现继承与接口继承。实现继承是指直接使用基类的属性和方法而无需额外编码的能力；接口继承是指仅使用属性和方法的名称、但是子类必须提供实现的能力；&lt;/p&gt;
+
+&lt;p&gt;所谓多态就是指一个类实例的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;如何抽象出一个类？&lt;/h2&gt;
+
+&lt;p&gt;使用一个关键字class和后面加上一个你想要的类名以及加上一对大括号， 这样一个类的结构就定义出来了&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class 类名
+{
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;一个简单的类&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+class Person
+{
+// 下面是人的成员属性
+var $name;  //人的名子
+var $sex;   //人的性别
+var $age;   //人的年龄
+ 
+// 下面是人的成员方法
+function say() // 这个人可以说话的方法
+{
+    echo &quot;这个人在说话&quot;;
+}
+ 
+function run() // 这个人可以走路的方法
+{
+    echo &quot;这个人在走路&quot;;
+}
+}
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;如何实例化对象&lt;/h2&gt;
+
+&lt;p&gt;当定义好类后，我们使用new关键字来生成一个对象。&lt;/p&gt;
+
+&lt;p&gt;$对象名称 = new 　类名称（）;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+class Person
+{
+//下面是人的成员属性
+var $name; //人的名字
+var $sex; //人的性别
+var $age; //人的年龄
+ 
+//下面是人的成员方法
+function say() { //这个人可以说话的方法
+    echo &quot;这个人在说话&quot;;
+}
+ 
+function run() { //这个人可以走路的方法
+    echo &quot;这个人在走路&quot;;
+}
+}
+ 
+$p1=new Person();
+$p3=new Person();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;如何去使用对象中的成员&lt;/h2&gt;
+
+&lt;p&gt;上面看到PHP对象中的成员有两种一种是成员属性， 一种是成员方法。对象我们以经可以声明了，$p1=new Person(); 怎么去使用对象的成员呢？要想访问对象中的成员就要使用一个特殊的操作符”-&amp;gt;”来完成对象成员的访问：&lt;/p&gt;
+
+&lt;p&gt;对象-&amp;gt;属性 $p1-&amp;gt;name; $p2-&amp;gt;age; $p3-&amp;gt;sex;&lt;/p&gt;
+
+&lt;p&gt;对象-&amp;gt;方法 $p1-&amp;gt;say(); $p2-&amp;gt;run(); 如下面实例:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+class Person
+{
+// 下面是人的成员属性
+var $name;      // 人的名子
+var $sex;       // 人的性别
+var $age;       // 人的年龄
+ 
+// 下面是人的成员方法
+function say() // 这个人可以说话的方法
+{
+    echo &quot;这个人在说话&quot;;
+}
+ 
+function run() // 这个人可以走路的方法
+{
+    echo &quot;这个人在走路&quot;;
+}
+}
+ 
+$p1 = new Person(); //创建实例对象$p1
+$p2 = new Person(); //创建实例对象$p2
+$p3 = new Person(); //创建实例对象$p3
+ 
+// 下面三行是给$p1对象属性赋值
+$p1-&amp;gt;name = &quot;张三&quot;;
+$p1-&amp;gt;sex = &quot;男&quot;;
+$p1-&amp;gt;age = 20;
+ 
+// 下面三行是访问$p1对象的属性
+echo &quot;p1对象的名子是：&quot; . $p1-&amp;gt;name;
+echo &quot;p1对象的性别是：&quot; . $p1-&amp;gt;sex;
+echo &quot;p1对象的年龄是：&quot; . $p1-&amp;gt;age;
+ 
+// 下面两行访问$p1对象中的方法
+$p1-&amp;gt;say();
+$p1-&amp;gt;run();
+ 
+// 下面三行是给$p2对象属性赋值
+$p2-&amp;gt;name = &quot;李四&quot;;
+$p2-&amp;gt;sex = &quot;女&quot;;
+$p2-&amp;gt;age = 30;
+ 
+// 下面三行是访问$p2对象的属性
+echo &quot;p2对象的名子是：&quot; . $p2-&amp;gt;name;
+echo &quot;p2对象的性别是：&quot; . $p2-&amp;gt;sex;
+echo &quot;p2对象的年龄是：&quot; . $p2-&amp;gt;age;
+ 
+// 下面两行访问$p2对象中的方法
+$p2-&amp;gt;say();
+$p2-&amp;gt;run();
+ 
+// 下面三行是给$p3对象属性赋值
+$p3-&amp;gt;name=&quot;王五&quot;;
+$p3-&amp;gt;sex=&quot;男&quot;;
+$p3-&amp;gt;age=40;
+ 
+// 下面三行是访问$p3对象的属性
+echo &quot;p3对象的名子是：&quot; . $p3-&amp;gt;name;
+echo &quot;p3对象的性别是：&quot; . $p3-&amp;gt;sex;
+echo &quot;p3对象的年龄是：&quot; . $p3-&amp;gt;age;
+ 
+// 下面两行访问$p3对象中的方法
+$p3-&amp;gt;say();
+$p3-&amp;gt;run();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从上例中可以看出只是对象里面的成员就要使用对象-&amp;gt;属性 、对象-&amp;gt;方法 形式访问，再没有第二种方法来访问对象中的成员了。&lt;/p&gt;
+
+&lt;h1 id=&quot;this-&quot;&gt;$this 的使用&lt;/h1&gt;
+
+&lt;p&gt;$this就是对象内部代表这个对象的引用，在对象内部和调用本对象的成员和对象外部调用对象的成员所使用的方式是一样的。&lt;/p&gt;
+
+&lt;p&gt;$this-&amp;gt;属性： $this-&amp;gt;name; $this-&amp;gt;age; $this-&amp;gt;sex;&lt;/p&gt;
+
+&lt;p&gt;$this-&amp;gt;方法 ：$this-&amp;gt;say(); $this-&amp;gt;run();&lt;/p&gt;
+
+&lt;h2 id=&quot;constructdestruct&quot;&gt;构造方法__construct()与析构方法__destruct()&lt;/h2&gt;
+
+&lt;p&gt;当创建一个对象时，它将自动调用构造函数，也就是使用new这个关键字来实例化对象的时候自动调用构造方法。&lt;/p&gt;
+
+&lt;p&gt;在一个类中只能声明一个构造方法，而是只有在每次创建对象的时候都会去调用一次构造方法，不能主动的调用这个方法，所以通常用它执行一些有用的初始化任务。比如对成属性在创建对象的时候赋初值。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?
+// 创建一个人类
+class Person
+{
+// 下面是人的成员属性
+var $name;  // 人的名子
+var $sex;   // 人的性别
+var $age;   // 人的年龄
+ 
+// 定义一个构造方法参数为姓名$name、性别$sex和年龄$age
+function __construct($name, $sex, $age)
+{
+    // 通过构造方法传进来的$name给成员属性$this-&amp;gt;name赋初使值
+    $this-&amp;gt;name = $name;
+ 
+    // 通过构造方法传进来的$sex给成员属性$this-&amp;gt;sex赋初使值
+    $this-&amp;gt;sex = $sex;
+ 
+    // 通过构造方法传进来的$age给成员属性$this-&amp;gt;age赋初使值
+    $this-&amp;gt;age = $age;
+}
+ 
+// 这个人的说话方法
+function say()
+{
+    echo &quot;我的名子叫：&quot; . $this-&amp;gt;name . &quot; 性别：&quot; . $this-&amp;gt;sex . &quot; 我的年龄是：&quot; . $this-&amp;gt;age;
+}
+}
+ 
+// 通过构造方法创建3个对象$p1、p2、$p3,分别传入三个不同的实参为姓名、性别和年龄
+$p1 = new Person(&quot;张三&quot;,&quot;男&quot;, 20);
+$p2 = new Person(&quot;李四&quot;,&quot;女&quot;, 30);
+$p3 = new Person(&quot;王五&quot;,&quot;男&quot;, 40);
+ 
+// 下面访问$p1对象中的说话方法
+$p1-&amp;gt;say();
+ 
+// 下面访问$p2对象中的说话方法
+$p2-&amp;gt;say();
+ 
+// 下面访问$p3对象中的说话方法
+$p3-&amp;gt;say();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出结果为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;我的名子叫：张三 性别：男 我的年龄是：20我的名子叫：李四 性别：女 我的年龄是：30我的名子叫：王五 性别：男 我的年龄是：40
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;析构函数：&lt;/p&gt;
+
+&lt;p&gt;与构造函数相对的就是析构函数。析构函数允许在销毁一个类之前执行的一些操作或完成一些功能，比如说关闭文件， 释放结果集等，析构函数会在到某个对象的所有引用都被删除或者当对象被显式销毁时执行，也就是对象在内存中被销毁前调用析构函数。与构造函数的名称类似， 一个类的析构函数名称必须是__destruct( )。析构函数不能带有任何参数。&lt;/p&gt;
+
+&lt;p&gt;格式：function __destruct ( ) { … … }&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?
+// 创建一个人类
+class Person
+{
+// 下面是人的成员属性
+var $name;  // 人的名子
+var $sex;   // 人的性别
+var $age;   // 人的年龄
+ 
+// 定义一个构造方法参数为姓名$name、性别$sex和年龄$age
+function __construct($name, $sex, $age)
+{
+    // 通过构造方法传进来的$name给成员属性$this-&amp;gt;name赋初使值
+    $this-&amp;gt;name = $name;
+     
+    // 通过构造方法传进来的$sex给成员属性$this-&amp;gt;sex赋初使值
+    $this-&amp;gt;sex = $sex;
+     
+    // 通过构造方法传进来的$age给成员属性$this-&amp;gt;age赋初使值
+    $this-&amp;gt;age = $age;
+}
+ 
+// 这个人的说话方法
+function say()
+{
+    echo &quot;我的名子叫：&quot; . $this-&amp;gt;name . &quot; 性别：&quot; . $this-&amp;gt;sex . &quot; 我的年龄是：&quot; . $this-&amp;gt;age;
+}
+ 
+// 这是一个析构函数,在对象销毁前调用
+function __destruct()
+{
+    echo &quot;再见&quot; . $this-&amp;gt;name;
+}
+}
+ 
+// 通过构造方法创建3个对象$p1、p2、$p3,分别传入三个不同的实参为姓名、性别和年龄
+$p1 = new Person(&quot;张三&quot;, &quot;男&quot;, 20);
+$p2 = new Person(&quot;李四&quot;, &quot;女&quot;, 30);
+$p3 = new Person(&quot;王五&quot;, &quot;男&quot;, 40);
+ 
+// 下面访问$p1对象中的说话方法
+$p1-&amp;gt;say();
+ 
+// 下面访问$p2对象中的说话方法
+$p2-&amp;gt;say();
+ 
+// 下面访问$p3对象中的说话方法
+$p3-&amp;gt;say();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出结果为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;我的名子叫：张三 性别：男 我的年龄是：20我的名子叫：李四 性别：女 我的年龄是：30我的名子叫：王五
+性别：男 我的年龄是：40
+再见王五
+再见李四
+再见张三
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意：&lt;/p&gt;
+
+&lt;p&gt;由于类实例是以堆栈的形式放在内存中，所以最后调用 析构函数 的时候，输出顺序是按 后进先出 的原则！&lt;/p&gt;
+
+&lt;h2 id=&quot;var--publicprotectedprivate&quot;&gt;封装性(var 与 public，protected,private的关系)&lt;/h2&gt;
+
+&lt;p&gt;通过private就可以把人的成员（成员属性和成员方法）封装上了。封装上的成员就不能被类外面直接访问了，只有对象内部自己可以访问，下面的代码会产生错误：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+class Person
+{
+// 下面是人的成员属性
+private $name;      // 人的名子，被private封装上了
+private $sex;       // 人的性别, 被private封装上了
+private $age;       // 人的年龄, 被private封装上了
+ 
+// 这个人可以说话的方法
+function say()
+{
+    echo &quot;我的名子叫：&quot; . $this-&amp;gt;name . &quot; 性别：&quot; . $this-&amp;gt;sex . &quot; 我的年龄是：&quot; . $this-&amp;gt;age;
+}
+ 
+// 这个人可以走路的方法, 被private封装上了
+private function run()
+{
+    echo &quot;这个人在走路&quot;;
+}
+}
+ 
+// 实例化一个人的实例对象
+$p1 = new Person();
+ 
+// 试图去给私有的属性赋值， 结果会发生错误
+$p1-&amp;gt;name = &quot;张三&quot;;
+$p1-&amp;gt;sex = &quot;男&quot;;
+$p1-&amp;gt;age = 20;
+ 
+// 试图去打印私有的属性， 结果会发生错误
+echo $p1-&amp;gt;name;
+echo $p1-&amp;gt;sex;
+echo $p1-&amp;gt;age;
+ 
+// 试图去打印私有的成员方法， 结果会发生错误
+$p1-&amp;gt;run();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出结果为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Fatal error: Cannot access private property Person::$name
+Fatal error: Cannot access private property Person::$sex
+Fatal error: Cannot access private property Person::$age
+Fatal error: Cannot access private property Person::$name
+Fatal error: Call to private method Person::run() from context &#39; &#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从上面的实例可以看到， 私有的成员是不能被外部访问的， 因为私有成员只能在本对象内部自己访问，比如，$p1这个对象自己想把他的私有属性说出去，在say()这个方法里面访问了私有属性，这样是可以。&lt;/p&gt;
+
+&lt;p&gt;没有加任何访问控制，默认的是public的，任何地方都可以访问。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 这个人可以说话的方法, 说出自己的私有属性，在这里也可以访问私有方法
+function say()
+{
+echo &quot;我的名子叫：&quot; . $this-&amp;gt;name . &quot; 性别：&quot; . $this-&amp;gt;sex . &quot; 我的年龄是：&quot; . $this-&amp;gt;age;
+ 
+// 在这里也可以访问私有方法
+//$this-&amp;gt;run();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为成员方法say()是公有的， 所以我们在类的外部调用say()方法是可以的，改变上面的代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+class Person
+{
+// 下面是人的成员属性
+private $name;  //人的名子,被private封装上了
+private $sex;   //人的性别, 被private封装上了
+private $age;   //人的年龄, 被private封装上了
+ 
+// 定义一个构造方法参数为私有的属性姓名$name、性别$sex和年龄$age进行赋值
+function __construct($name, $sex, $age)
+{
+    // 通过构造方法传进来的$name给私有成员属性$this-&amp;gt;name赋初使值
+    $this-&amp;gt;name = $name;
+ 
+    // 通过构造方法传进来的$sex给私有成员属性$this-&amp;gt;sex赋初使值
+    $this-&amp;gt;sex = $sex;
+ 
+    // 通过构造方法传进来的$age给私有成员属性$this-&amp;gt;age赋初使值
+    $this-&amp;gt;age = $age;
+}
+ 
+// 这个人可以说话的方法, 说出自己的私有属性,在这里也可以访问私有方法
+function say()
+{
+    echo &quot;我的名子叫：&quot; . $this-&amp;gt;name . &quot; 性别：&quot; . $this-&amp;gt;sex . &quot; 我的年龄是：&quot; . $this-&amp;gt;age;
+}
+}
+ 
+// 通过构造方法创建3个对象$p1、p2、$p3,分别传入三个不同的实参为姓名、性别和年龄
+$p1 = new Person(&quot;张三&quot;, &quot;男&quot;, 20);
+$p2 = new Person(&quot;李四&quot;, &quot;女&quot;, 30);
+$p3 = new Person(&quot;王五&quot;, &quot;男&quot;, 40);
+ 
+// 下面访问$p1对象中的说话方法
+$p1-&amp;gt;say();
+ 
+// 下面访问$p2对象中的说话方法
+$p2-&amp;gt;say();
+ 
+// 下面访问$p3对象中的说话方法
+$p3-&amp;gt;say();
+?&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出结果为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;我的名子叫：张三 性别：男 我的年龄是：20我的名子叫：李四 性别：女 我的年龄是：30我的名子叫：王五 性别：男 我的年龄是：40
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;更多面向对象知识点参考 http://www.cnblogs.com/xiaochaohuashengmi/archive/2010/09/10/1823042.html&lt;/p&gt;
+</description>
+        <pubDate>Sat, 06 Sep 2014 00:00:00 +0800</pubDate>
+        <link>http://beiyuu.com/php-object</link>
+        <guid isPermaLink="true">http://beiyuu.com/php-object</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>JS学习</title>
+        <description>&lt;h2 id=&quot;javascript&quot;&gt;Javascript的使用&lt;/h2&gt;
+
+&lt;p&gt;HTML 中的脚本必须位于 &lt;script&gt; 与 &lt;/script&gt; 标签之间。脚本可被放置在 HTML 页面的 &amp;lt;body&amp;gt; 和 &amp;lt;head&amp;gt; 部分中。如需在 HTML 页面中插入 JavaScript，请使用 &lt;script&gt; 标签。&lt;script&gt; 和 &lt;/script&gt; 会告诉JavaScript 在何处开始和结束。&lt;script&gt; 和 &lt;/script&gt; 之间的代码行包含了 JavaScript：&lt;/script&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
+alert(&quot;My First JavaScript&quot;);
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行此脚本的时候会弹出一个”My First JavaScript”的框。&lt;/p&gt;
+
+&lt;p&gt;如需使用外部文件，请在 &lt;script&gt; 标签的 &quot;src&quot; 属性中设置该 .js 文件：&lt;/script&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;body&amp;gt;
+&amp;lt;script src=&quot;myScript.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;javascript-1&quot;&gt;Javascript变量&lt;/h2&gt;
+
+&lt;p&gt;变量使用”var”关键字来声明&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var x=2;
+var y=3;
+var z=x+y;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;变量可以使用短名称（比如 x 和 y），也可以使用描述性更好的名称（比如 age, sum, totalvolume）。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;变量必须以字母开头&lt;/li&gt;
+  &lt;li&gt;变量也能以 $ 和 _ 符号开头（不过我们不推荐这么做）&lt;/li&gt;
+  &lt;li&gt;变量名称对大小写敏感（y 和 Y 是不同的变量）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;提示：JavaScript 语句和 JavaScript 变量都对大小写敏感。&lt;/p&gt;
+
+&lt;h2 id=&quot;javascript-&quot;&gt;声明（创建） JavaScript 变量&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;var carname;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;变量声明之后，该变量是空的（它没有值）。&lt;/p&gt;
+
+&lt;p&gt;如需向变量赋值，请使用等号：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;carname=&quot;Volvo&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;您可以在一条语句中声明很多变量。该语句以 var 开头，并使用逗号分隔变量即可：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var name=&quot;Gates&quot;, age=56, job=&quot;CEO&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;javascript--1&quot;&gt;JavaScript 数据类型&lt;/h2&gt;
+
+&lt;p&gt;字符串、数字、布尔、数组、对象、Null、Undefined&lt;/p&gt;
+
+&lt;p&gt;JavaScript 字符串&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var carname=&quot;Bill Gates&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JavaScript 数字&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var x1=34.00;      //使用小数点来写
+var x2=34;         //不使用小数点来写
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;极大或极小的数字可以通过科学（指数）计数法来书写：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var y=123e5;      // 12300000
+var z=123e-5;     // 0.00123
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JavaScript 布尔&lt;/p&gt;
+
+&lt;p&gt;布尔（逻辑）只能有两个值：true 或 false。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var x=true
+var y=false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JavaScript 数组&lt;/p&gt;
+
+&lt;p&gt;下面的代码创建名为 cars 的数组：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var cars=new Array();
+cars[0]=&quot;Audi&quot;;
+cars[1]=&quot;BMW&quot;;
+cars[2]=&quot;Volvo&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或者 (condensed array):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var cars=new Array(&quot;Audi&quot;,&quot;BMW&quot;,&quot;Volvo&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或者 (literal array):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var cars=[&quot;Audi&quot;,&quot;BMW&quot;,&quot;Volvo&quot;];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JavaScript 对象&lt;/p&gt;
+
+&lt;p&gt;对象由花括号分隔。在括号内部，对象的属性以名称和值对的形式 (name : value) 来定义。属性由逗号分隔：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var person={firstname:&quot;Bill&quot;, lastname:&quot;Gates&quot;, id:5566};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Undefined 和 Null&lt;/p&gt;
+
+&lt;p&gt;Undefined 这个值表示变量不含有值。&lt;/p&gt;
+
+&lt;p&gt;可以通过将变量的值设置为 null 来清空变量。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cars=null;
+person=null;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;声明变量类型&lt;/p&gt;
+
+&lt;p&gt;当您声明新变量时，可以使用关键词 “new” 来声明其类型：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var carname=new String;
+var x=      new Number;
+var y=      new Boolean;
+var cars=   new Array;
+var person= new Object;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;dom&quot;&gt;DOM事件&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当用户点击鼠标时        onclick()&lt;/li&gt;
+  &lt;li&gt;当网页加载时            onload 和 onunload 事件&lt;/li&gt;
+  &lt;li&gt;当鼠标移动到元素上时    onmouseover 和 onmouseout 事件&lt;/li&gt;
+  &lt;li&gt;当输入字段被改变时      onmousedown、onmouseup 以及 onclick 事件&lt;/li&gt;
+  &lt;li&gt;当提交 HTML 表单时&lt;/li&gt;
+  &lt;li&gt;当用户触发按键时&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;onfocus  获得焦点时&lt;/p&gt;
+
+&lt;p&gt;onblur   失去焦点时&lt;/p&gt;
+
+&lt;h2 id=&quot;javascript-date&quot;&gt;JavaScript Date日期&lt;/h2&gt;
+
+&lt;p&gt;返回当日的日期和时间&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Date()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;getTime() 返回从 1970 年 1 月 1 日至今的毫秒数&lt;/p&gt;
+
+&lt;p&gt;setFullYear() 设置具体的日期。&lt;/p&gt;
+
+&lt;p&gt;toUTCString() 将当日的日期（根据 UTC）转换为字符串。&lt;/p&gt;
+
+&lt;p&gt;getDay() 和数组来显示星期，而不仅仅是数字。&lt;/p&gt;
+
+&lt;p&gt;如何在网页上显示一个钟表。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+&amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
+function startTime()
+{
+var today=new Date()
+var h=today.getHours()
+var m=today.getMinutes()
+var s=today.getSeconds()
+// add a zero in front of numbers&amp;lt;10
+m=checkTime(m)
+s=checkTime(s)
+document.getElementById(&#39;txt&#39;).innerHTML=h+&quot;:&quot;+m+&quot;:&quot;+s
+t=setTimeout(&#39;startTime()&#39;,500)
+}
+
+function checkTime(i)
+{
+if (i&amp;lt;10) 
+{i=&quot;0&quot; + i}
+return i
+}
+&amp;lt;/script&amp;gt;
+&amp;lt;/head&amp;gt;
+
+&amp;lt;body onload=&quot;startTime()&quot;&amp;gt;
+&amp;lt;div id=&quot;txt&quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+</description>
+        <pubDate>Tue, 01 Jul 2014 00:00:00 +0800</pubDate>
+        <link>http://beiyuu.com/php-js</link>
+        <guid isPermaLink="true">http://beiyuu.com/php-js</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>使用Github Pages建独立博客</title>
+        <description>&lt;p&gt;&lt;a href=&quot;http://github.com&quot; title=&quot;Github&quot;&gt;Github&lt;/a&gt;很好的将代码和社区联系在了一起，于是发生了很多有趣的事情，世界也因为他美好了一点点。Github作为现在最流行的代码仓库，已经得到很多大公司和项目的青睐，比如&lt;a href=&quot;https://github.com/jquery/jquery&quot; title=&quot;jQuery@github&quot;&gt;jQuery&lt;/a&gt;、&lt;a href=&quot;https://github.com/twitter/bootstrap&quot; title=&quot;Twitter@github&quot;&gt;Twitter&lt;/a&gt;等。为使项目更方便的被人理解，介绍页面少不了，甚至会需要完整的文档站，Github替你想到了这一点，他提供了&lt;a href=&quot;http://pages.github.com/&quot; title=&quot;Github Pages&quot;&gt;Github Pages&lt;/a&gt;的服务，不仅可以方便的为项目建立介绍站点，也可以用来建立个人博客。&lt;/p&gt;
+
+&lt;p&gt;Github Pages有以下几个优点：&lt;/p&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;轻量级的博客系统，没有麻烦的配置&lt;/li&gt;
+    &lt;li&gt;使用标记语言，比如&lt;a href=&quot;http://markdown.tw&quot;&gt;Markdown&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;无需自己搭建服务器&lt;/li&gt;
+    &lt;li&gt;根据Github的限制，对应的每个站有300MB空间&lt;/li&gt;
+    &lt;li&gt;可以绑定自己的域名&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当然他也有缺点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;使用&lt;a href=&quot;https://github.com/mojombo/jekyll&quot; title=&quot;Jekyll&quot;&gt;Jekyll&lt;/a&gt;模板系统，相当于静态页发布，适合博客，文档介绍等。&lt;/li&gt;
+  &lt;li&gt;动态程序的部分相当局限，比如没有评论，不过还好我们有解决方案。&lt;/li&gt;
+  &lt;li&gt;基于Git，很多东西需要动手，不像Wordpress有强大的后台&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;大致介绍到此，作为个人博客来说，简洁清爽的表达自己的工作、心得，就已达目标，所以Github Pages是我认为此需求最完美的解决方案了。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;购买、绑定独立域名&lt;/h2&gt;
+&lt;p&gt;虽说&lt;a href=&quot;http://www.godaddy.com/&quot; title=&quot;Godaddy&quot;&gt;Godaddy&lt;/a&gt;曾支持过SOPA，并且首页放着极其不专业的大胸美女，但是作为域名服务商他做的还不赖，选择它最重要的原因是他支持支付宝，没有信用卡有时真的很难过。&lt;/p&gt;
+
+&lt;p&gt;域名的购买不用多讲，注册、选域名、支付，有网购经验的都毫无压力，优惠码也遍地皆是。域名的配置需要提醒一下，因为伟大英明的GFW的存在，我们必须多做些事情。&lt;/p&gt;
+
+&lt;p&gt;流传Godaddy的域名解析服务器被墙掉，导致域名无法访问，后来这个事情在&lt;a href=&quot;http://beiyuu.com&quot; title=&quot;BeiYuu&quot;&gt;BeiYuu&lt;/a&gt;也发生了，不得已需要把域名解析服务迁移到国内比较稳定的服务商处，这个迁移对于域名来说没有什么风险，最终的控制权还是在Godaddy那里，你随时都可以改回去。&lt;/p&gt;
+
+&lt;p&gt;我们选择&lt;a href=&quot;https://www.dnspod.cn/&quot; title=&quot;DNSPod&quot;&gt;DNSPod&lt;/a&gt;的服务，他们的产品做得不错，易用、免费，收费版有更高端的功能，暂不需要。注册登录之后，按照DNSPod的说法，只需三步（我们插入一步）：&lt;/p&gt;
+
+&lt;ul&gt;
+	&lt;li&gt;首先添加域名记录，可参考DNSPod的帮助文档：&lt;a href=&quot;https://www.dnspod.cn/Support&quot;&gt;https://www.dnspod.cn/Support&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;在DNSPod自己的域名下添加一条&lt;a href=&quot;http://baike.baidu.com/view/65575.htm&quot;&gt;A记录&lt;/a&gt;，地址就是Github Pages的服务IP地址：207.97.227.245&lt;/li&gt;
+	&lt;li&gt;在域名注册商处修改DNS服务:去Godaddy修改Nameservers为这两个地址：f1g1ns1.dnspod.net、f1g1ns2.dnspod.net。如果你不明白在哪里修改，可以参考这里：&lt;a href=&quot;https://www.dnspod.cn/support/index/fid/119&quot;&gt;Godaddy注册的域名如何使用DNSPod&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;等待域名解析生效&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;域名的配置部分完成，跪谢方校长。&lt;/p&gt;
+
+&lt;h2 id=&quot;github&quot;&gt;配置和使用Github&lt;/h2&gt;
+&lt;p&gt;Git是版本管理的未来，他的优点我不再赘述，相关资料很多。推荐这本&lt;a href=&quot;http://progit.org/book/zh/&quot; title=&quot;Pro Git中文版&quot;&gt;Git中文教程&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;要使用Git，需要安装它的客户端，推荐在Linux下使用Git，会比较方便。Windows版的下载地址在这里：&lt;a href=&quot;http://code.google.com/p/msysgit/downloads/list&quot; title=&quot;Windows版Git客户端&quot;&gt;http://code.google.com/p/msysgit/downloads/list&lt;/a&gt;。其他系统的安装也可以参考官方的&lt;a href=&quot;http://help.github.com/mac-set-up-git/&quot; title=&quot;Mac下Git安装&quot;&gt;安装教程&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;下载安装客户端之后，各个系统的配置就类似了，我们使用windows作为例子，Linux和Mac与此类似。&lt;/p&gt;
+
+&lt;p&gt;在Windows下，打开Git Bash，其他系统下面则打开终端（Terminal）：
+&lt;img src=&quot;/images/githubpages/bootcamp_1_win_gitbash.jpg&quot; alt=&quot;Git Bash&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;ssh-keys&quot;&gt;1、检查SSH keys的设置&lt;/h3&gt;
+&lt;p&gt;首先我们需要检查你电脑上现有的ssh key：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd ~/.ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果显示“No such file or directory”，跳到第三步，否则继续。&lt;/p&gt;
+
+&lt;h3 id=&quot;ssh-key&quot;&gt;2、备份和移除原来的ssh key设置：&lt;/h3&gt;
+&lt;p&gt;因为已经存在key文件，所以需要备份旧的数据并删除：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ls
+config	id_rsa	id_rsa.pub	known_hosts
+$ mkdir key_backup
+$ cp id_rsa* key_backup
+$ rm id_rsa*
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;ssh-key-1&quot;&gt;3、生成新的SSH Key：&lt;/h3&gt;
+&lt;p&gt;输入下面的代码，就可以生成新的key文件，我们只需要默认设置就好，所以当需要输入文件名的时候，回车就好。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ssh-keygen -t rsa -C &quot;邮件地址@youremail.com&quot;
+Generating public/private rsa key pair.
+Enter file in which to save the key (/Users/your_user_directory/.ssh/id_rsa):&amp;lt;回车就好&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后系统会要你输入加密串（&lt;a href=&quot;http://help.github.com/ssh-key-passphrases/&quot;&gt;Passphrase&lt;/a&gt;）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Enter passphrase (empty for no passphrase):&amp;lt;输入加密串&amp;gt;
+Enter same passphrase again:&amp;lt;再次输入加密串&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后看到这样的界面，就成功设置ssh key了：
+&lt;img src=&quot;/images/githubpages/ssh-key-set.png&quot; alt=&quot;ssh key success&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;ssh-keygithub&quot;&gt;4、添加SSH Key到GitHub：&lt;/h3&gt;
+&lt;p&gt;在本机设置SSH Key之后，需要添加到GitHub上，以完成SSH链接的设置。&lt;/p&gt;
+
+&lt;p&gt;用文本编辑工具打开id_rsa.pub文件，如果看不到这个文件，你需要设置显示隐藏文件。准确的复制这个文件的内容，才能保证设置的成功。&lt;/p&gt;
+
+&lt;p&gt;在GitHub的主页上点击设置按钮：
+&lt;img src=&quot;/images/githubpages/github-account-setting.png&quot; alt=&quot;github account setting&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;选择SSH Keys项，把复制的内容粘贴进去，然后点击Add Key按钮即可：
+&lt;img src=&quot;/images/githubpages/bootcamp_1_ssh.jpg&quot; alt=&quot;set ssh keys&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;PS：如果需要配置多个GitHub账号，可以参看这个&lt;a href=&quot;http://omiga.org/blog/archives/2269&quot;&gt;多个github帐号的SSH key切换&lt;/a&gt;，不过需要提醒一下的是，如果你只是通过这篇文章中所述配置了Host，那么你多个账号下面的提交用户会是一个人，所以需要通过命令&lt;code&gt;git config --global --unset user.email&lt;/code&gt;删除用户账户设置，在每一个repo下面使用&lt;code&gt;git config --local user.email &#39;你的github邮箱@mail.com&#39;&lt;/code&gt; 命令单独设置用户账户信息&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;5、测试一下&lt;/h3&gt;
+&lt;p&gt;可以输入下面的命令，看看设置是否成功，&lt;code&gt;git@github.com&lt;/code&gt;的部分不要修改：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ssh -T git@github.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果是下面的反应：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;The authenticity of host &#39;github.com (207.97.227.239)&#39; can&#39;t be established.
+RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.
+Are you sure you want to continue connecting (yes/no)?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不要紧张，输入&lt;code&gt;yes&lt;/code&gt;就好，然后会看到：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Hi &amp;lt;em&amp;gt;username&amp;lt;/em&amp;gt;! You&#39;ve successfully authenticated, but GitHub does not provide shell access.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;6、设置你的账号信息&lt;/h3&gt;
+&lt;p&gt;现在你已经可以通过SSH链接到GitHub了，还有一些个人信息需要完善的。&lt;/p&gt;
+
+&lt;p&gt;Git会根据用户的名字和邮箱来记录提交。GitHub也是用这些信息来做权限的处理，输入下面的代码进行个人信息的设置，把名称和邮箱替换成你自己的，名字必须是你的真名，而不是GitHub的昵称。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git config --global user.name &quot;你的名字&quot;
+$ git config --global user.email &quot;your_email@youremail.com&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;githubtoken&quot;&gt;设置GitHub的token&lt;/h4&gt;
+
+&lt;p&gt;2012-4-28补充：新版的接口已经不需要配置token了，所以下面这段可以跳过了&lt;/p&gt;
+
+&lt;p&gt;有些工具没有通过SSH来链接GitHub。如果要使用这类工具，你需要找到然后设置你的API Token。&lt;/p&gt;
+
+&lt;p&gt;在GitHub上，你可以点击&lt;em&gt;Account Setting &amp;gt; Account Admin&lt;/em&gt;：
+&lt;img src=&quot;/images/githubpages/bootcamp_1_token.jpg&quot; alt=&quot;set ssh keys&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后在你的命令行中，输入下面的命令，把token添加进去：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git config --global user.name &quot;你的名字&quot;
+$ git config --global user.token 0123456789your123456789token
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果你改了GitHub的密码，需要重新设置token。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;成功了&lt;/h3&gt;
+&lt;p&gt;好了，你已经可以成功连接GitHub了。&lt;/p&gt;
+
+&lt;h2 id=&quot;github-pages&quot;&gt;使用GitHub Pages建立博客&lt;/h2&gt;
+&lt;p&gt;与GitHub建立好链接之后，就可以方便的使用它提供的Pages服务，GitHub Pages分两种，一种是你的GitHub用户名建立的&lt;code&gt;username.github.io&lt;/code&gt;这样的用户&amp;amp;组织页（站），另一种是依附项目的pages。&lt;/p&gt;
+
+&lt;h3 id=&quot;user--organization-pages&quot;&gt;User &amp;amp; Organization Pages&lt;/h3&gt;
+&lt;p&gt;想建立个人博客是用的第一种，形如&lt;code&gt;beiyuu.github.io&lt;/code&gt;这样的可访问的站，每个用户名下面只能建立一个，创建之后点击&lt;code&gt;Admin&lt;/code&gt;进入项目管理，可以看到是这样的：
+&lt;img src=&quot;/images/githubpages/user-pages.png&quot; alt=&quot;user pages&quot; /&gt;
+而普通的项目是这样的，即使你也是用的&lt;code&gt;othername.github.io&lt;/code&gt;：
+&lt;img src=&quot;/images/githubpages/other-pages.png&quot; alt=&quot;other pages&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;创建好&lt;code&gt;username.github.io&lt;/code&gt;项目之后，提交一个&lt;code&gt;index.html&lt;/code&gt;文件，然后&lt;code&gt;push&lt;/code&gt;到GitHub的&lt;code&gt;master&lt;/code&gt;分支（也就是普通意义上的主干）。第一次页面生效需要一些时间，大概10分钟左右。&lt;/p&gt;
+
+&lt;p&gt;生效之后，访问&lt;code&gt;username.github.io&lt;/code&gt;就可以看到你上传的页面了，&lt;a href=&quot;http://beiyuu.github.io&quot;&gt;beiyuu.github.io&lt;/a&gt;就是一个例子。&lt;/p&gt;
+
+&lt;p&gt;关于第二种项目&lt;code&gt;pages&lt;/code&gt;，简单提一下，他和用户pages使用的后台程序是同一套，只不过它的目的是项目的帮助文档等跟项目绑定的内容，所以需要在项目的&lt;code&gt;gh-pages&lt;/code&gt;分支上去提交相应的文件，GitHub会自动帮你生成项目pages。具体的使用帮助可以参考&lt;a href=&quot;http://pages.github.com/&quot; title=&quot;Github Pages&quot;&gt;Github Pages&lt;/a&gt;的官方文档：&lt;/p&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;绑定域名&lt;/h3&gt;
+&lt;p&gt;我们在第一部分就提到了在DNS部分的设置，再来看在GitHub的配置，要想让&lt;code&gt;username.github.io&lt;/code&gt;能通过你自己的域名来访问，需要在项目的根目录下新建一个名为&lt;code&gt;CNAME&lt;/code&gt;的文件，文件内容形如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;beiyuu.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;你也可以绑定在二级域名上：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;blog.beiyuu.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要提醒的一点是，如果你使用形如&lt;code&gt;beiyuu.com&lt;/code&gt;这样的一级域名的话，需要在DNS处设置A记录到&lt;code&gt;207.97.227.245&lt;/code&gt;（&lt;strong&gt;这个地址会有变动，&lt;a href=&quot;https://help.github.com/articles/my-custom-domain-isn-t-working&quot;&gt;这里&lt;/a&gt;查看&lt;/strong&gt;），而不是在DNS处设置为CNAME的形式，否则可能会对其他服务（比如email）造成影响。&lt;/p&gt;
+
+&lt;p&gt;设置成功后，根据DNS的情况，最长可能需要一天才能生效，耐心等待吧。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyll&quot;&gt;Jekyll模板系统&lt;/h2&gt;
+&lt;p&gt;GitHub Pages为了提供对HTML内容的支持，选择了&lt;a href=&quot;https://github.com/mojombo/jekyll&quot; title=&quot;Jekyll&quot;&gt;Jekyll&lt;/a&gt;作为模板系统，Jekyll是一个强大的静态模板系统，作为个人博客使用，基本上可以满足要求，也能保持管理的方便，你可以查看&lt;a href=&quot;https://github.com/mojombo/jekyll/blob/master/README.textile&quot;&gt;Jekyll官方文档&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;你可以直接fork&lt;a href=&quot;https://github.com/beiyuu/Github-Pages-Example&quot;&gt;我的项目&lt;/a&gt;，然后改名，就有了你自己的满足Jekyll要求的文档了，当然你也可以按照下面的介绍自己创建。&lt;/p&gt;
+
+&lt;h3 id=&quot;jekyll-1&quot;&gt;Jekyll基本结构&lt;/h3&gt;
+&lt;p&gt;Jekyll的核心其实就是一个文本的转换引擎，用你最喜欢的标记语言写文档，可以是Markdown、Textile或者HTML等等，再通过&lt;code&gt;layout&lt;/code&gt;将文档拼装起来，根据你设置的URL规则来展现，这些都是通过严格的配置文件来定义，最终的产出就是web页面。&lt;/p&gt;
+
+&lt;p&gt;基本的Jekyll结构如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;|-- _config.yml
+|-- _includes
+|-- _layouts
+|   |-- default.html
+|   `-- post.html
+|-- _posts
+|   |-- 2007-10-29-why-every-programmer-should-play-nethack.textile
+|   `-- 2009-04-26-barcamp-boston-4-roundup.textile
+|-- _site
+`-- index.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;简单介绍一下他们的作用：&lt;/p&gt;
+
+&lt;h4 id=&quot;configyml&quot;&gt;_config.yml&lt;/h4&gt;
+
+&lt;p&gt;配置文件，用来定义你想要的效果，设置之后就不用关心了。&lt;/p&gt;
+
+&lt;h4 id=&quot;includes&quot;&gt;_includes&lt;/h4&gt;
+&lt;p&gt;可以用来存放一些小的可复用的模块，方便通过&lt;code&gt;{ % include file.ext %}&lt;/code&gt;（去掉前两个{中或者{与%中的空格，下同）灵活的调用。这条命令会调用_includes/file.ext文件。&lt;/p&gt;
+
+&lt;h4 id=&quot;layouts&quot;&gt;_layouts&lt;/h4&gt;
+&lt;p&gt;这是模板文件存放的位置。模板需要通过&lt;a href=&quot;https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter&quot;&gt;YAML front matter&lt;/a&gt;来定义，后面会讲到，&lt;code&gt;{ { content }}&lt;/code&gt;标记用来将数据插入到这些模板中来。&lt;/p&gt;
+
+&lt;h4 id=&quot;posts&quot;&gt;_posts&lt;/h4&gt;
+&lt;p&gt;你的动态内容，一般来说就是你的博客正文存放的文件夹。他的命名有严格的规定，必须是&lt;code&gt;2012-02-22-artical-title.MARKUP&lt;/code&gt;这样的形式，MARKUP是你所使用标记语言的文件后缀名，根据_config.yml中设定的链接规则，可以根据你的文件名灵活调整，文章的日期和标记语言后缀与文章的标题的独立的。&lt;/p&gt;
+
+&lt;h4 id=&quot;site&quot;&gt;_site&lt;/h4&gt;
+&lt;p&gt;这个是Jekyll生成的最终的文档，不用去关心。最好把他放在你的&lt;code&gt;.gitignore&lt;/code&gt;文件中忽略它。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-5&quot;&gt;其他文件夹&lt;/h4&gt;
+&lt;p&gt;你可以创建任何的文件夹，在根目录下面也可以创建任何文件，假设你创建了&lt;code&gt;project&lt;/code&gt;文件夹，下面有一个&lt;code&gt;github-pages.md&lt;/code&gt;的文件，那么你就可以通过&lt;code&gt;yoursite.com/project/github-pages&lt;/code&gt;访问的到，如果你是使用一级域名的话。文件后缀可以是&lt;code&gt;.html&lt;/code&gt;或者&lt;code&gt;markdown&lt;/code&gt;或者&lt;code&gt;textile&lt;/code&gt;。这里还有很多的例子：&lt;a href=&quot;https://github.com/mojombo/jekyll/wiki/Sites&quot;&gt;https://github.com/mojombo/jekyll/wiki/Sites&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;jekyll-2&quot;&gt;Jekyll的配置&lt;/h3&gt;
+&lt;p&gt;Jekyll的配置写在_config.yml文件中，可配置项有很多，我们不去一一追究了，很多配置虽有用但是一般不需要去关心，&lt;a href=&quot;https://github.com/mojombo/jekyll/wiki/configuration&quot;&gt;官方配置文档&lt;/a&gt;有很详细的说明，确实需要了可以去这里查，我们主要说两个比较重要的东西，一个是&lt;code&gt;Permalink&lt;/code&gt;，还有就是自定义项。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Permalink&lt;/code&gt;项用来定义你最终的文章链接是什么形式，他有下面几个变量：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;year&lt;/code&gt; 文件名中的年份&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;month&lt;/code&gt; 文件名中的月份&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;day&lt;/code&gt; 文件名中的日期&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;title&lt;/code&gt; 文件名中的文章标题&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;categories&lt;/code&gt; 文章的分类，如果文章没有分类，会忽略&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;i-month&lt;/code&gt; 文件名中的除去前缀0的月份&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;i-day&lt;/code&gt; 文件名中的除去前缀0的日期&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;看看最终的配置效果：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;permalink: pretty&lt;/code&gt; /2009/04/29/slap-chop/index.html&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;permalink: /:month-:day-:year/:title.html&lt;/code&gt; /04-29-2009/slap-chop.html&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;permalink: /blog/:year/:month/:day/:title&lt;/code&gt; /blog/2009/04/29/slap-chop/index.html&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我使用的是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;permalink: /:title&lt;/code&gt; /github-pages&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;自定义项的内容，例如我们定义了&lt;code&gt;title:BeiYuu的博客&lt;/code&gt;这样一项，那么你就可以在文章中使用&lt;code&gt;{ { site.title }}&lt;/code&gt;来引用这个变量了，非常方便定义些全局变量。&lt;/p&gt;
+
+&lt;h3 id=&quot;yaml-front-matter&quot;&gt;YAML Front Matter和模板变量&lt;/h3&gt;
+&lt;p&gt;对于使用YAML定义格式的文章，Jekyll会特别对待，他的格式要求比较严格，必须是这样的形式：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;---
+layout: post
+title: Blogging Like a Hacker
+---
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;前后的&lt;code&gt;---&lt;/code&gt;不能省略，在这之间，你可以定一些你需要的变量，layout就是调用&lt;code&gt;_layouts&lt;/code&gt;下面的某一个模板，他还有一些其他的变量可以使用：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;permalink&lt;/code&gt; 你可以对某一篇文章使用通用设置之外的永久链接&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;published&lt;/code&gt; 可以单独设置某一篇文章是否需要发布&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;category&lt;/code&gt; 设置文章的分类&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;tags&lt;/code&gt; 设置文章的tag&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上面的&lt;code&gt;title&lt;/code&gt;就是自定义的内容，你也可以设置其他的内容，在文章中可以通过&lt;code&gt;{ { page.title }}&lt;/code&gt;这样的形式调用。&lt;/p&gt;
+
+&lt;p&gt;模板变量，我们之前也涉及了不少了，还有其他需要的变量，可以参考官方的文档：&lt;a href=&quot;https://github.com/mojombo/jekyll/wiki/template-data&quot; title=&quot;Jekyll Template Data&quot;&gt;https://github.com/mojombo/jekyll/wiki/template-data&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;disqus&quot;&gt;使用Disqus管理评论&lt;/h2&gt;
+&lt;p&gt;模板部分到此就算是配置完毕了，但是Jekyll只是个静态页面的发布系统，想做到关爽场倒是很容易，如果想要评论呢？也很简单。&lt;/p&gt;
+
+&lt;p&gt;现在专做评论模块的产品有很多，比如&lt;a href=&quot;http://disqus.com/&quot;&gt;Disqus&lt;/a&gt;，还有国产的&lt;a href=&quot;http://duoshuo.com/&quot;&gt;多说&lt;/a&gt;，Disqus对现在各种系统的支持都比较全面，到写博客为止，多说现在仅是WordPress的一个插件，所以我这里暂时也使用不了，多说与国内的社交网络紧密结合，还是有很多亮点的，值得期待一下。我先选择了Disqus。&lt;/p&gt;
+
+&lt;p&gt;注册账号什么的就不提了，Disqus支持很多的博客平台，参见下图：
+&lt;img src=&quot;/images/githubpages/disqus-site.jpg&quot; alt=&quot;Disqus sites&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们选择最下面的&lt;code&gt;Universal Code&lt;/code&gt;就好，然后会看到一个介绍页面，把下面这段代码复制到你的模板里面，可以只复制到显示文章的模板中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div id=&quot;disqus_thread&quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = &#39;example&#39;; // required: replace example with your forum shortname 这个地方需要改成你配置的网站名
+
+    /* * * DON&#39;T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement(&#39;script&#39;); dsq.type = &#39;text/javascript&#39;; dsq.async = true;
+        dsq.src = &#39;http://&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;;
+        (document.getElementsByTagName(&#39;head&#39;)[0] || document.getElementsByTagName(&#39;body&#39;)[0]).appendChild(dsq);
+    })();
+&amp;lt;/script&amp;gt;
+&amp;lt;noscript&amp;gt;Please enable JavaScript to view the &amp;lt;a href=&quot;http://disqus.com/?ref_noscript&quot;&amp;gt;comments powered by Disqus.&amp;lt;/a&amp;gt;&amp;lt;/noscript&amp;gt;
+&amp;lt;a href=&quot;http://disqus.com&quot; class=&quot;dsq-brlink&quot;&amp;gt;blog comments powered by &amp;lt;span class=&quot;logo-disqus&quot;&amp;gt;Disqus&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;配置完之后，你也可以做一些异步加载的处理，提高性能，比如我就在最开始页面打开的时候不显示评论，当你想看评论的时候，点击“显示评论”再加载Disqus的模块。代码很简单，你可以参考我的写法。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$(&#39;#disqus_container .comment&#39;).on(&#39;click&#39;,function(){
+        $(this).html(&#39;加载中...&#39;);
+        var disqus_shortname = &#39;beiyuu&#39;;
+        var that = this;
+        BYB.includeScript(&#39;http://&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;,function(){$(that).remove()}); //这是一个加载js的函数
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果你不喜欢Disqus的样式，你也可以根据他生成的HTML结构，自己改写样式覆盖它的，Disqus现在也提供每个页面的评论数接口，&lt;a href=&quot;http://docs.disqus.com/developers/universal/&quot;&gt;帮助文档&lt;/a&gt;在这里可以看到。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;代码高亮插件&lt;/h2&gt;
+&lt;p&gt;如果写技术博客，代码高亮少不了，有两个可选插件&lt;a href=&quot;http://mihai.bazon.net/projects/javascript-syntax-highlighting-engine&quot;&gt;DlHightLight代码高亮组件&lt;/a&gt;和&lt;a href=&quot;http://code.google.com/p/google-code-prettify/&quot;&gt;Google Code Prettify&lt;/a&gt;。DLHightLight支持的语言相对较少一些，有js、css、xml和html，Google的高亮插件基本上任何语言都支持，也可以自定义语言，也支持自动识别，也有行号的特别支持。&lt;/p&gt;
+
+&lt;p&gt;Google的高亮插件使用也比较方便，只需要在&lt;code&gt;&amp;lt;pre&amp;gt;&lt;/code&gt;的标签上加入&lt;code&gt;prettyprint&lt;/code&gt;即可。所以我选择了Google Code Prettify。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyll-3&quot;&gt;搭建本地jekyll环境&lt;/h2&gt;
+&lt;p&gt;这里主要介绍一下在Mac OS X下面的安装过程，其他操作系统可以参考官方的&lt;a href=&quot;https://github.com/mojombo/jekyll/wiki/Install&quot;&gt;jekyll安装&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;作为生活在水深火热的墙内人民，有必要进行下面一步修改gem的源，方便我们更快的下载所需组建：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo gem sources --remove http://rubygems.org/
+sudo gem sources -a http://ruby.taobao.org/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后用Gem安装jekyll&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ gem install jekyll
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不过一般如果有出错提示，你可能需要这样安装：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo gem install jekyll
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我到了这一步的时候总是提示错误&lt;code&gt;Failed to build gem native extension&lt;/code&gt;，很可能的一个原因是没有安装rvm，&lt;a href=&quot;https://rvm.io/rvm/install/&quot;&gt;rvm的安装&lt;/a&gt;可以参考这里，或者敲入下面的命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl -L https://get.rvm.io | bash -s stable --ruby
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后还需要安装Markdown的解释器，这个需要在你的_config.yml里面设置&lt;code&gt;markdown:rdiscount&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ gem install jekyll rdiscount
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好了，如果一切顺利的话，本地环境就基本搭建完成了，进入之前我们建立的博客目录，运行下面的命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ jekyll serve --watch
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个时候，你就可以通过&lt;code&gt;localhost:4000&lt;/code&gt;来访问了。还有关于&lt;a href=&quot;http://jekyllbootstrap.com/&quot;&gt;jekyll bootstrap&lt;/a&gt;的资料，需要自己修改调试的，可以研究一下。&lt;/p&gt;
+
+&lt;p&gt;我在这个过程中还遇到两个诡异的没有解决的问题，一个是我放在根目录下面的blog.md等文件，在GitHub的pages服务上一切正常，可以通过&lt;code&gt;beiyuu.com/blog&lt;/code&gt;访问的到，但是在本地环境下，总是&lt;code&gt;not found&lt;/code&gt;，很是让人郁闷，看生成的&lt;code&gt;_site&lt;/code&gt;目录下面的文件，也是正常的&lt;code&gt;blog.html&lt;/code&gt;，但就是找不到，只有当我把URL改为&lt;code&gt;localhost:4000/blog.html&lt;/code&gt;的时候，才能访问的到，环境不同真糟糕。&lt;/p&gt;
+
+&lt;p&gt;还有一个是关于&lt;code&gt;category&lt;/code&gt;的问题，根据&lt;code&gt;YAML&lt;/code&gt;的语法，我们在文章头部可以定义文章所属的类别，也可以定义为&lt;code&gt;category:[blog,rss]&lt;/code&gt;这样子的多类别，我在本地试一切正常，但是push到GitHub之后，就无法读取了，真让人着急，没有办法，只能采用别的办法满足我的需求了。这里还有一篇&lt;a href=&quot;http://chxt6896.github.com/blog/2012/02/13/blog-jekyll-native.html&quot;&gt;Jekyll 本地调试之若干问题&lt;/a&gt;，安装中如果有其他问题，也可以对照参考一下。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-7&quot;&gt;结语&lt;/h2&gt;
+&lt;p&gt;如果你跟着这篇不那么详尽的教程，成功搭建了自己的博客，恭喜你！剩下的就是保持热情的去写自己的文章吧。&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 20 Jun 2014 00:00:00 +0800</pubDate>
+        <link>http://beiyuu.com/github-pages</link>
+        <guid isPermaLink="true">http://beiyuu.com/github-pages</guid>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+  </channel>
+</rss>

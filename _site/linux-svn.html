@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Likai的博客</title>
+    <meta name="author" content="BieYuu" />
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="BeiYuu's Blog" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="alternate" type="application/atom+xml" title="Recent Entries" href="/atom.xml" />
+    <style>html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+  color: #000;
+  background: #fff;
+}
+ol,
+ul {
+  list-style: none;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  vertical-align: middle;
+}
+caption,
+th,
+td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+a img {
+  border: none;
+}
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+main {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  display: block;
+}
+audio,
+canvas,
+video {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+audio:not([controls]),
+[hidden] {
+  display: none;
+}
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+body {
+  font-family: Helvetica, Tahoma, Arial, 'Hiragino Sans GB', '\51AC\9752\9ED1\4F53', 'Microsoft YaHei', '\5FAE\8F6F\96C5\9ED1', STXihei, '\534E\6587\7EC6\9ED1', SimSun, '\5B8B\4F53', Heiti, '\9ED1\4F53', sans-serif;
+  font-size: 16px;
+}
+@media screen and (max-width: 767px) {
+  body {
+    font-size: 14px;
+  }
+}
+a {
+  color: #4a75b5;
+  text-decoration: none;
+  outline: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a.external {
+  padding-right: 13px;
+  background: url("/images/icons.gif") no-repeat right 1px;
+}
+a.external:hover {
+  background-position: right -15px;
+}
+.index-wrapper .aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  max-width: 500px;
+  background: #59a0b0;
+}
+@media screen and (max-width: 767px) {
+  .index-wrapper .aside {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    max-width: none;
+  }
+}
+.index-wrapper .info-card {
+  position: absolute;
+  margin-top: 70%;
+  text-align: center;
+  width: 100%;
+}
+@media screen and (max-width: 767px) {
+  .index-wrapper .info-card {
+    margin-top: 70px;
+  }
+}
+.index-wrapper .info-card h1 {
+  font-size: 40px;
+  color: #fff;
+  margin-bottom: 20px;
+  text-shadow: 0 0 80px rgba(255,255,255,0.5);
+  letter-spacing: 0.15em;
+  text-shadow: rgba(255,255,255,0.5) 0 0 15px, rgba(255,255,255,0.5) 0 0 10px;
+}
+.index-wrapper .info-card a {
+  margin: 0 15px;
+}
+.index-wrapper .index-content {
+  margin-left: 30%;
+  padding-top: 80px;
+  padding-right: 15%;
+}
+@media screen and (max-width: 767px) {
+  .index-wrapper .index-content {
+    margin-left: 0;
+    padding-right: 0;
+  }
+}
+.index-wrapper .artical-list {
+  width: 70%;
+  margin: 0 auto;
+}
+@media screen and (max-width: 767px) {
+  .index-wrapper .artical-list {
+    width: 85%;
+  }
+}
+.index-wrapper .artical-list li {
+  margin-bottom: 70px;
+}
+.index-wrapper .title {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 15px;
+  word-break: break-all;
+  font-weight: bold;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+  color: #444;
+}
+@media screen and (max-width: 767px) {
+  .index-wrapper .title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+}
+.index-wrapper .title:hover {
+  color: #e50053;
+  text-decoration: none;
+}
+.index-wrapper .title-desc {
+  color: #999;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.body-post {
+  background: #f5f5f5;
+}
+@media screen and (max-width: 767px) {
+  .body-post {
+    background: #fff;
+  }
+}
+.post-wrapper {
+  width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 80px 60px;
+}
+@media screen and (max-width: 767px) {
+  .post-wrapper {
+    width: 85%;
+    margin: 100px auto 50px;
+    padding: 0;
+  }
+}
+.post-wrapper .post-title,
+.post-wrapper .post-title a {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #000;
+  text-align: center;
+  word-wrap: break-word;
+}
+@media screen and (max-width: 767px) {
+  .post-wrapper .post-title,
+  .post-wrapper .post-title a {
+    font-size: 24px;
+  }
+}
+.post-wrapper .post-title:hover,
+.post-wrapper .post-title a:hover {
+  text-decoration: none;
+}
+.post-wrapper .post-date {
+  text-align: center;
+  color: #999;
+  margin-bottom: 60px;
+  font-size: 14px;
+}
+@media screen and (max-width: 767px) {
+  .post-wrapper .post-date {
+    margin-bottom: 40px;
+  }
+}
+.post-wrapper h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+@media $mobiel {
+  .post-wrapper h2 {
+    font-size: 20px;
+  }
+}
+.post-wrapper h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #222;
+}
+@media screen and (max-width: 767px) {
+  .post-wrapper h3 {
+    font-size: 16px;
+  }
+}
+.post-wrapper h4,
+.post-wrapper h5,
+.post-wrapper h6 {
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.post-wrapper p {
+  margin-bottom: 40px;
+  line-height: 1.8em;
+}
+.post-wrapper code {
+  background: #eee;
+  border: 1px solid #ccc;
+  padding: 0 5px;
+  font-family: "Courier";
+  line-height: 14px;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+.post-wrapper pre {
+  background: #f7f3f7;
+  padding: 20px 30px 15px;
+  overflow: auto;
+  margin-bottom: 40px;
+  font-size: 14px;
+  border: 1px solid #eee;
+  color: #b9bdb6;
+  margin-top: -20px;
+}
+.post-wrapper pre code {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  word-wrap: normal;
+}
+@media screen and (max-width: 767px) {
+  .post-wrapper pre code {
+    line-height: 1em;
+    font-size: 12px;
+  }
+}
+.post-wrapper h4+pre,
+.post-wrapper h3+pre {
+  margin-top: 20px;
+}
+.post-wrapper ul {
+  margin-bottom: 25px;
+  margin-left: 25px;
+}
+.post-wrapper ul li {
+  margin-bottom: 5px;
+  list-style: disc;
+  line-height: 1.8em;
+}
+.post-wrapper p + ul {
+  margin-top: -20px;
+}
+.post-wrapper ol {
+  margin-bottom: 25px;
+  margin-left: 25px;
+}
+.post-wrapper ol li {
+  margin-bottom: 5px;
+  list-style: decimal;
+  line-height: 1.1em;
+}
+@media screen and (max-width: 767px) {
+  .post-wrapper ol li {
+    margin-bottom: 0;
+    line-height: 1em;
+  }
+}
+.post-wrapper blockquote {
+  margin-left: 25px;
+  font-size: 14px;
+  font-style: italic;
+}
+.post-wrapper img {
+  max-width: 670px;
+  display: block;
+  margin: 10px auto;
+}
+@media screen and (max-width: 767px) {
+  .post-wrapper img {
+    max-width: 90%;
+  }
+}
+.post-wrapper table {
+  margin: 0 auto;
+}
+.about-wrapper {
+  background: #7e96a9;
+  width: 900px;
+  margin: 0 auto;
+  padding: 30px 60px;
+}
+@media screen and (max-width: 767px) {
+  .about-wrapper {
+    width: 100%;
+    padding: 0 7.5% 30px;
+  }
+}
+.about-wrapper .aboutme {
+  zoom: 1;
+}
+.about-wrapper .aboutme:before,
+.about-wrapper .aboutme:after {
+  content: "";
+  display: table;
+}
+.about-wrapper .aboutme:after {
+  clear: both;
+}
+.about-wrapper .aboutme h2 {
+  margin-bottom: 20px;
+}
+.about-wrapper .aboutme h2 a {
+  font-size: 18px;
+}
+.about-wrapper .aboutme li {
+  line-height: 1.4;
+  margin-bottom: 10px;
+  float: left;
+  width: 50%;
+}
+@media screen and (max-width: 767px) {
+  .about-wrapper .aboutme li {
+    float: none;
+    width: 80%;
+  }
+}
+.about-wrapper .aboutme a {
+  color: #fff;
+  font-size: 14px;
+}
+#particles-js {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  -webkit-background-size: 20%;
+  -moz-background-size: 20%;
+  background-size: 20%;
+  background-position: 50% 50%;
+  background: #38658c;
+  background: -webkit-radial-gradient(top left, #5d3571, #38658c);
+  background: -moz-radial-gradient(top left, #5d3571, #38658c);
+  background: -o-radial-gradient(top left, #5d3571, #38658c);
+  background: -ms-radial-gradient(top left, #5d3571, #38658c);
+  background: radial-gradient(to bottom right, #5d3571, #38658c);
+}
+#disqus_container {
+  font-size: 12px;
+}
+#disqus_container .share-con {
+  float: right;
+  margin-bottom: 20px;
+}
+#disqus_container a.comment {
+  font-size: 14px;
+}
+.prettyprint {
+  background: #f7f3f7;
+  border: 0 !important;
+}
+.pln {
+  color: #1b181b;
+}
+ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #5a7b8c;
+}
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L4,
+li.L5,
+li.L6,
+li.L7,
+li.L8,
+li.L9 {
+  padding-left: 0.4em;
+  background-color: #f7f3f7;
+  list-style-type: decimal;
+}
+@media screen {
+  .str {
+    color: #918b3b;
+  }
+  .kwd {
+    color: #7b59c0;
+  }
+  .com {
+    color: #5a7b8c;
+  }
+  .typ {
+    color: #516aec;
+  }
+  .lit {
+    color: #a65926;
+  }
+  .pun {
+    color: #1b181b;
+  }
+  .opn {
+    color: #1b181b;
+  }
+  .clo {
+    color: #1b181b;
+  }
+  .tag {
+    color: #ca402b;
+  }
+  .atn {
+    color: #a65926;
+  }
+  .atv {
+    color: #159393;
+  }
+  .dec {
+    color: #a65926;
+  }
+  .var {
+    color: #ca402b;
+  }
+  .fun {
+    color: #516aec;
+  }
+}
+.wiki h2 {
+  cursor: pointer;
+}
+.wiki ul {
+  margin-left: 30px;
+  margin-bottom: 20px;
+  list-style: disc;
+}
+.wiki ul li {
+  margin-bottom: 5px;
+}
+.wiki ul ul {
+  list-style: circle;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+</style>
+  </head>
+
+  <body class="body-post">
+  <div class="post-wrapper">
+    <h1 class="post-title"><a href="/linux-svn" title="linux">linux</a></h1>
+    <p class="post-date">2015-03-19</p>
+    <h2 id="svn">安装SVN客户端</h2>
+
+<p>使用SVN进行文件上传前，请在您的本地PC上安装SVN客户端。推荐使用1.7版本的SVN客户端。请不要升级到1.8版本，1.8版本存在缺陷，可能会导致SVN同步异常。</p>
+
+<p>SVN客户端下载：http://subversion.apache.org/download/</p>
+
+<p>SVN中文简介：http://www.subversion.org.cn/?action-channel-name-product</p>
+
+<p>SVN手册：http://svndoc.iusesvn.com/</p>
+
+<h2 id="svn-1">创建本地目录并连接到SVN库</h2>
+
+<p>从SVN库中checkout该应用所有WebService下的所有版本的代码到本地，即在本地机器上为该应用创建了一个应用的根目录：[AppID]，以及该应用下所有Web服务以及Web服务下的所有版本的目录。
+当然，在您还没有上传任何代码到SVN库之前，这里checkout出来的只是目录，版本目录下是没有文件的（除了自动生成的.svny文件夹以及index.html ）。</p>
+
+<ol>
+  <li>
+    <p>checkout的命令如下：</p>
+
+    <p>//你可能需要了解如何获取SVN仓库地址 svn checkout [SVN库地址]</p>
+
+    <p>示例：
+ svn checkout https://svn.opencloud.qq.com/10507</p>
+  </li>
+  <li>
+    <p>输入上述命令后，需要检验该SVN库的用户名和密码（即应用的云服务账号和密码，您可能需要了解如何查看云服务账号和密码）。</p>
+  </li>
+</ol>
+
+<h2 id="section">提交文件</h2>
+
+<p>将您需要部署的程序复制到对应的目录下，然后使用add命令增加到SVN库，最后使用commit命令提交到SVN库。
+例如您需要将文件夹“test”部署到Web服务“PyNormal”下的版本“1”里，则需要将“test”复制（请使用-rf，强行复制目录以及目录下的文件）到“10507/PyNormal/1”目录下。如下所示：</p>
+
+<pre><code>cd 10507/PyNormal/1
+cp -rf /dev/test/* ./
+svn add ./*
+svn commit -m"add test"
+</code></pre>
+
+<h2 id="section-1">修改文件</h2>
+
+<p>您可以直接在本地使用编辑器打开SVN工作目录下的某个文件并进行修改，修改完成后，试用commit命令提交即可。
+例如您对“10507/PyNormal/1”目录下的某个文件“index.php”使用Vim命令进行了修改并提交。如下所示：</p>
+
+<pre><code>cd 10507/PyNormal/1
+vim index.html
+svn commit -m "edit index.html"
+</code></pre>
+
+<h2 id="section-2">删除文件</h2>
+
+<p>步骤如下：
+1. 进入本地待删除文件的目录。
+2. 用delete命令删除。
+3. 用commit命令进行提交。</p>
+
+<p>例如要删除12345/ws/1/a.text文件：</p>
+
+<pre><code>cd 12345/ws/1
+
+svn delete a.text
+
+svn commit -m "delete a.text"
+</code></pre>
+
+<h2 id="linux">linux常用命令</h2>
+
+<p>1、cd命令</p>
+
+<p>这是一个非常基本，也是大家经常需要使用的命令，它用于切换当前目录，它的参数是要切换到的目录的路径，可以是绝对路径，也可以是相对路径。如：</p>
+
+<pre><code>cd /root/Docements # 切换到目录/root/Docements  
+cd ./path          # 切换到当前目录下的path目录中，“.”表示当前目录    
+cd ../path         # 切换到上层目录中的path目录中，“..”表示上一层目录  
+</code></pre>
+
+<p>2、ls命令</p>
+
+<p>这是一个非常有用的查看文件与目录的命令，list之意，它的参数非常多，下面就列出一些我常用的参数吧，如下：</p>
+
+<pre><code>-l ：列出长数据串，包含文件的属性与权限数据等  
+-a ：列出全部的文件，连同隐藏文件（开头为.的文件）一起列出来（常用）  
+-d ：仅列出目录本身，而不是列出目录的文件数据  
+-h ：将文件容量以较易读的方式（GB，kB等）列出来  
+-R ：连同子目录的内容一起列出（递归列出），等于该目录下的所有文件都会显示出来  
+</code></pre>
+
+<p>注：这些参数也可以组合使用，下面举两个例子：</p>
+
+<pre><code>ls -l #以长数据串的形式列出当前目录下的数据文件和目录  
+ls -lR #以长数据串的形式列出当前目录下的所有文件  
+</code></pre>
+
+<p>3、grep命令</p>
+
+<p>该命令常用于分析一行的信息，若当中有我们所需要的信息，就将该行显示出来，该命令通常与管道命令一起使用，用于对一些命令的输出进行筛选加工等等，它的简单语法为</p>
+
+<pre><code>grep [-acinv] [--color=auto] '查找字符串' filename  
+</code></pre>
+
+<p>它的常用参数如下：</p>
+
+<pre><code>-a ：将binary文件以text文件的方式查找数据  
+-c ：计算找到‘查找字符串’的次数  
+-i ：忽略大小写的区别，即把大小写视为相同  
+-v ：反向选择，即显示出没有‘查找字符串’内容的那一行  
+# 例如：  
+# 取出文件/etc/man.config中包含MANPATH的行，并把找到的关键字加上颜色  
+grep --color=auto 'MANPATH' /etc/man.config  
+# 把ls -l的输出中包含字母file（不区分大小写）的内容输出  
+ls -l | grep -i file  
+</code></pre>
+
+<p>4、find命令</p>
+
+<p>find是一个基于查找的功能非常强大的命令，相对而言，它的使用也相对较为复杂，参数也比较多，所以在这里将给把它们分类列出，它的基本语法如下：</p>
+
+<pre><code># 与时间有关的参数：  
+-mtime n : n为数字，意思为在n天之前的“一天内”被更改过的文件；  
+-mtime +n : 列出在n天之前（不含n天本身）被更改过的文件名；  
+-mtime -n : 列出在n天之内（含n天本身）被更改过的文件名；  
+-newer file : 列出比file还要新的文件名  
+# 例如：  
+find /root -mtime 0 # 在当前目录下查找今天之内有改动的文件  
+  
+# 与用户或用户组名有关的参数：  
+-user name : 列出文件所有者为name的文件  
+-group name : 列出文件所属用户组为name的文件  
+-uid n : 列出文件所有者为用户ID为n的文件  
+-gid n : 列出文件所属用户组为用户组ID为n的文件  
+# 例如：  
+find /home/ljianhui -user ljianhui # 在目录/home/ljianhui中找出所有者为ljianhui的文件  
+  
+# 与文件权限及名称有关的参数：  
+-name filename ：找出文件名为filename的文件  
+-size [+-]SIZE ：找出比SIZE还要大（+）或小（-）的文件  
+-tpye TYPE ：查找文件的类型为TYPE的文件，TYPE的值主要有：一般文件（f)、设备文件（b、c）、  
+             目录（d）、连接文件（l）、socket（s）、FIFO管道文件（p）；  
+-perm mode ：查找文件权限刚好等于mode的文件，mode用数字表示，如0755；  
+-perm -mode ：查找文件权限必须要全部包括mode权限的文件，mode用数字表示  
+-perm +mode ：查找文件权限包含任一mode的权限的文件，mode用数字表示  
+# 例如：  
+find / -name passwd # 查找文件名为passwd的文件  
+find . -perm 0755 # 查找当前目录中文件权限的0755的文件  
+find . -size +12k # 查找当前目录中大于12KB的文件，注意c表示byte  
+</code></pre>
+
+<p>5、cp命令</p>
+
+<p>该命令用于复制文件，copy之意，它还可以把多个文件一次性地复制到一个目录下，它的常用参数如下：</p>
+
+<pre><code>-a ：将文件的特性一起复制  
+-p ：连同文件的属性一起复制，而非使用默认方式，与-a相似，常用于备份  
+-i ：若目标文件已经存在时，在覆盖时会先询问操作的进行  
+-r ：递归持续复制，用于目录的复制行为  
+-u ：目标文件与源文件有差异时才会复制  
+</code></pre>
+
+<p>例如 ：</p>
+
+<pre><code>cp -a file1 file2 #连同文件的所有特性把文件file1复制成文件file2  
+cp file1 file2 file3 dir #把文件file1、file2、file3复制到目录dir中  
+</code></pre>
+
+<p>6、mv命令</p>
+
+<p>该命令用于移动文件、目录或更名，move之意，它的常用参数如下：</p>
+
+<pre><code>-f ：force强制的意思，如果目标文件已经存在，不会询问而直接覆盖  
+-i ：若目标文件已经存在，就会询问是否覆盖  
+-u ：若目标文件已经存在，且比目标文件新，才会更新  
+</code></pre>
+
+<p>注：该命令可以把一个文件或多个文件一次移动一个文件夹中，但是最后一个目标文件一定要是“目录”。</p>
+
+<p>例如：</p>
+
+<pre><code>mv file1 file2 file3 dir # 把文件file1、file2、file3移动到目录dir中  
+mv file1 file2 # 把文件file1重命名为file2  
+</code></pre>
+
+<p>7、rm命令</p>
+
+<p>该命令用于删除文件或目录，remove之间，它的常用参数如下：</p>
+
+<pre><code>-f ：就是force的意思，忽略不存在的文件，不会出现警告消息  
+-i ：互动模式，在删除前会询问用户是否操作  
+-r ：递归删除，最常用于目录删除，它是一个非常危险的参数  
+</code></pre>
+
+<p>例如：</p>
+
+<pre><code>rm -i file # 删除文件file，在删除之前会询问是否进行该操作  
+rm -fr dir # 强制删除目录dir中的所有文件  
+</code></pre>
+
+<p>8、ps命令</p>
+
+<p>该命令用于将某个时间点的进程运行情况选取下来并输出，process之意，它的常用参数如下：</p>
+
+<pre><code>-A ：所有的进程均显示出来  
+-a ：不与terminal有关的所有进程  
+-u ：有效用户的相关进程  
+-x ：一般与a参数一起使用，可列出较完整的信息  
+-l ：较长，较详细地将PID的信息列出  
+</code></pre>
+
+<p>其实我们只要记住ps一般使用的命令参数搭配即可，它们并不多，如下：</p>
+
+<pre><code>ps aux # 查看系统所有的进程数据  
+ps ax # 查看不与terminal有关的所有进程  
+ps -lA # 查看系统所有的进程数据  
+ps axjf # 查看连同一部分进程树状态  
+</code></pre>
+
+<p>9、kill命令</p>
+
+<p>该命令用于向某个工作（%jobnumber）或者是某个PID（数字）传送一个信号，它通常与ps和jobs命令一起使用，它的基本语法如下：</p>
+
+<pre><code>kill -signal PID 
+</code></pre>
+
+<p>signal的常用参数如下：
+注：最前面的数字为信号的代号，使用时可以用代号代替相应的信号。</p>
+
+<pre><code>1：SIGHUP，启动被终止的进程  
+2：SIGINT，相当于输入ctrl+c，中断一个程序的进行  
+9：SIGKILL，强制中断一个进程的进行  
+15：SIGTERM，以正常的结束进程方式来终止进程  
+17：SIGSTOP，相当于输入ctrl+z，暂停一个进程的进行  
+</code></pre>
+
+<p>例如：</p>
+
+<pre><code># 以正常的结束进程方式来终于第一个后台工作，可用jobs命令查看后台中的第一个工作进程  
+kill -SIGTERM %1   
+# 重新改动进程ID为PID的进程，PID可用ps命令通过管道命令加上grep命令进行筛选获得  
+kill -SIGHUP PID  
+</code></pre>
+
+<p>10、killall命令</p>
+
+<p>该命令用于向一个命令启动的进程发送一个信号，它的一般语法如下：</p>
+
+<pre><code>killall [-iIe] [command name]  
+</code></pre>
+
+<p>它的参数如下：</p>
+
+<pre><code>-i ：交互式的意思，若需要删除时，会询问用户  
+-e ：表示后面接的command name要一致，但command name不能超过15个字符  
+-I ：命令名称忽略大小写  
+# 例如：  
+killall -SIGHUP syslogd # 重新启动syslogd 
+</code></pre>
+
+<p>11、file命令</p>
+
+<p>该命令用于判断接在file命令后的文件的基本数据，因为在Linux下文件的类型并不是以后缀为分的，所以这个命令对我们来说就很有用了，它的用法非常简单，基本语法如下：</p>
+
+<pre><code>file filename  
+#例如：  
+file ./test
+</code></pre>
+
+<p>12、tar命令</p>
+
+<p>该命令用于对文件进行打包，默认情况并不会压缩，如果指定了相应的参数，它还会调用相应的压缩程序（如gzip和bzip等）进行压缩和解压。它的常用参数如下：</p>
+
+<pre><code>-c ：新建打包文件  
+-t ：查看打包文件的内容含有哪些文件名  
+-x ：解打包或解压缩的功能，可以搭配-C（大写）指定解压的目录，注意-c,-t,-x不能同时出现在同一条命令中  
+-j ：通过bzip2的支持进行压缩/解压缩  
+-z ：通过gzip的支持进行压缩/解压缩  
+-v ：在压缩/解压缩过程中，将正在处理的文件名显示出来  
+-f filename ：filename为要处理的文件  
+-C dir ：指定压缩/解压缩的目录dir  
+</code></pre>
+
+<p>上面的解说可以已经让你晕过去了，但是通常我们只需要记住下面三条命令即可：</p>
+
+<pre><code>压缩：tar -jcv -f filename.tar.bz2 要被处理的文件或目录名称  
+查询：tar -jtv -f filename.tar.bz2  
+解压：tar -jxv -f filename.tar.bz2 -C 欲解压缩的目录  
+</code></pre>
+
+<p>注：文件名并不定要以后缀tar.bz2结尾，这里主要是为了说明使用的压缩程序为bzip2</p>
+
+<p>13、cat命令</p>
+
+<p>该命令用于查看文本文件的内容，后接要查看的文件名，通常可用管道与more和less一起使用，从而可以一页页地查看数据。例如：</p>
+
+<pre><code>cat text | less # 查看text文件中的内容  
+# 注：这条命令也可以使用less text来代替  
+</code></pre>
+
+<p>14、chgrp命令
+该命令用于改变文件所属用户组，它的使用非常简单，它的基本用法如下：</p>
+
+<pre><code>chgrp [-R] dirname/filename  
+-R ：进行递归的持续对所有文件和子目录更改  
+# 例如：  
+chgrp users -R ./dir # 递归地把dir目录下中的所有文件和子目录下所有文件的用户组修改为users 
+</code></pre>
+
+<p>15、chown命令</p>
+
+<p>该命令用于改变文件的所有者，与chgrp命令的使用方法相同，只是修改的文件属性不同，不再详述。</p>
+
+<p>16、chmod命令</p>
+
+<p>该命令用于改变文件的权限，一般的用法如下：</p>
+
+<pre><code>chmod [-R] xyz 文件或目录  
+-R：进行递归的持续更改，即连同子目录下的所有文件都会更改  
+</code></pre>
+
+<p>同时，chmod还可以使用u（user）、g（group）、o（other）、a（all）和+（加入）、-（删除）、=（设置）跟rwx搭配来对文件的权限进行更改。</p>
+
+<pre><code># 例如：  
+chmod 0755 file # 把file的文件权限改变为-rxwr-xr-x  
+chmod g+w file # 向file的文件权限中加入用户组可写权限  
+</code></pre>
+
+<p>18、vim命令</p>
+
+<p>该命令主要用于文本编辑，它接一个或多个文件名作为参数，如果文件存在就打开，如果文件不存在就以该文件名创建一个文件。vim是一个非常好用的文本编辑器</p>
+
+<p>19、gcc命令</p>
+
+<p>对于一个用Linux开发C程序的人来说，这个命令就非常重要了，它用于把C语言的源程序文件，编译成可执行程序，由于g++的很多参数跟它非常相似，所以这里只介绍gcc的参数，它的常用参数如下：</p>
+
+<pre><code>-o ：output之意，用于指定生成一个可执行文件的文件名  
+-c ：用于把源文件生成目标文件（.o)，并阻止编译器创建一个完整的程序  
+-I ：增加编译时搜索头文件的路径  
+-L ：增加编译时搜索静态连接库的路径  
+-S ：把源文件生成汇编代码文件  
+-lm：表示标准库的目录中名为libm.a的函数库  
+-lpthread ：连接NPTL实现的线程库  
+-std= ：用于指定把使用的C语言的版本  
+  
+# 例如：  
+# 把源文件test.c按照c99标准编译成可执行程序test  
+gcc -o test test.c -lm -std=c99  
+#把源文件test.c转换为相应的汇编程序源文件test.s  
+gcc -S test.c  
+</code></pre>
+
+<p>20、time命令</p>
+
+<p>该命令用于测算一个命令（即程序）的执行时间。它的使用非常简单，就像平时输入命令一样，不过在命令的前面加入一个time即可，例如：</p>
+
+<pre><code>time ./process  
+time ps aux  
+</code></pre>
+
+<p>在程序或命令运行结束后，在最后输出了三个时间，它们分别是：
+user：用户CPU时间，命令执行完成花费的用户CPU时间，即命令在用户态中执行时间总和；
+system：系统CPU时间，命令执行完成花费的系统CPU时间，即命令在核心态中执行时间总和；
+real：实际时间，从command命令行开始执行到运行终止的消逝时间；</p>
+
+<p>注：用户CPU时间和系统CPU时间之和为CPU时间，即命令占用CPU执行的时间总和。实际时间要大于CPU时间，因为Linux是多任务操作系统，往往在执行一条命令时，系统还要处理其它任务。另一个需要注意的问题是即使每次执行相同命令，但所花费的时间也是不一样，其花费时间是与系统运行相关的。</p>
+
+    <div id="disqus_container">
+  <div class="share-con">
+    <script type="text/javascript" charset="utf-8">
+      (function(){
+        var param = {
+          url: 'http://beiyuu.com/linux-svn',
+          type: '6',
+          title: '《linux》' + '- 本文主要讲解一下linux下svn的使用以及linux的一些常用命令',
+          ralateUid: '1855270953',
+          rnd:new Date().valueOf()
+        }
+        var temp = [];
+        for( var p in param ){
+          temp.push(p + '=' + encodeURIComponent( param[p] || '' ) )
+        }
+        document.write('<iframe allowTransparency="true" frameborder="0" scrolling="no" src="http://hits.sinajs.cn/A1/weiboshare.html?' + temp.join('&') + '" width="86" height="16"></iframe>')
+      })()
+    </script>
+  </div>
+
+  <a href="#" class="comment" onclick="return false;">点击查看评论</a>
+  <div id="disqus_thread"></div>
+</div>
+
+  </div>
+
+  <div class="about-wrapper">
+  <iframe width="100%" height="75" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=75&fansRow=2&ptype=1&speed=0&skin=5&isTitle=0&noborder=0&isWeibo=0&isFans=0&uid=1855270953&verifier=375b89d6&dpc=1" style="margin: 30px 0;"></iframe>
+
+  <div class="aboutme">
+    <h2><a href="/">所有文章</a></h2>
+    <ul>
+      
+      <li>
+        <a href="/carriage-return-line-feed-new-line-end-file-%E5%89%AF%E6%9C%AC-%E5%89%AF%E6%9C%AC" class="title">回车、换行、和文件末尾空行</a>
+      </li>
+      
+      <li>
+        <a href="/pdo-mysql" class="title">PDO学习与使用</a>
+      </li>
+      
+      <li>
+        <a href="/linux-svn" class="title">linux</a>
+      </li>
+      
+      <li>
+        <a href="/session-cookie" class="title">session与cookie</a>
+      </li>
+      
+      <li>
+        <a href="/php-object" class="title">php之面向对象</a>
+      </li>
+      
+      <li>
+        <a href="/php-js" class="title">JS学习</a>
+      </li>
+      
+      <li>
+        <a href="/github-pages" class="title">使用Github Pages建独立博客</a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+  <script src="/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+  <script src="/js/post.js" type="text/javascript"></script>
+</body>
+
+</html>
